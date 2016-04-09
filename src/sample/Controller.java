@@ -7,6 +7,7 @@ package sample;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
@@ -25,7 +26,7 @@ import sample.core.Board;
 public class Controller implements Initializable {
 
     final static private int horBoardSz = 243, verBoardSz = 15, cellSpacePx = 35, cellSizePx = 30,
-            maxFreqensy = 300;
+            maxFreqency = 300;
 
     @FXML
     private FlowPane base;
@@ -36,7 +37,7 @@ public class Controller implements Initializable {
     private HBox rootBox;
 
     @FXML
-    private Slider densitySlide, freqSlide;
+    private Slider densitySlider, freqSlider;
 
     private Board board;
 
@@ -49,19 +50,13 @@ public class Controller implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         board = new Board();
         createDisplay();
-        attachResizeListener();
+        attachResizeListeners();
     }
 
     @FXML
     private void onRun(Event evt) {
         toggleButtons(false);
-        loop = new Timeline(new KeyFrame(Duration.millis(maxFreqensy / freqSlide.getValue()), event -> {
-            board.update();
-            display.displayBoard(board);
-        }));
-
-        loop.setCycleCount(1000);
-        loop.play();
+        loopStart(null);
     }
 
     @FXML
@@ -72,14 +67,31 @@ public class Controller implements Initializable {
 
     @FXML
     private void onGenerate(Event evt) {
-        board.generate(densitySlide.getValue());
+        board.generate(densitySlider.getValue());
         display.displayBoard(board);
+    }
+
+    @FXML
+    private void onFreqChanged(Event evt) {
+        if (loop.getStatus() == Animation.Status.RUNNING)
+           loopStart(loop);
     }
 
     private void toggleButtons(boolean enable) {
         runButton.setDisable(!enable);
 
         stopButton.setDisable(enable);
+    }
+
+    private void loopStart(Timeline oldLoop){
+        loop = new Timeline(new KeyFrame(Duration.millis(maxFreqency / freqSlider.getValue()), event -> {
+            board.update();
+            display.displayBoard(board);
+        }));
+
+        loop.setCycleCount(200);
+        if (oldLoop!=null) oldLoop.stop();
+        loop.play();
     }
 
     private void createDisplay() {
@@ -89,7 +101,7 @@ public class Controller implements Initializable {
         base.getChildren().add(new Group(display.getPane()));
     }
 
-    private void attachResizeListener() {
+    private void attachResizeListeners() {
         ChangeListener<Number> widthListener = new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
