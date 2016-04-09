@@ -12,16 +12,17 @@ import sample.core.Cell;
 
 public class DisplayDriver {
     private int sz;
-    private TilePane tilePane = new TilePane(5, 5);
+    private TilePane tilePane;
 
-    public DisplayDriver(int boardSize, int cellSizePx, Board board) {
-        sz = boardSize;
-        tilePane.setPrefRows(boardSize);
-        tilePane.setPrefColumns(boardSize);
-
+    public DisplayDriver(int cellSizePx, Board board) {
         Cell[][] grid = board.getGrid();
-        for (int i = 0; i < boardSize; i++) {
-            for (int j = 0; j < boardSize; j++) {
+        sz = board.getCols();
+        tilePane = new TilePane(5, 5);
+        tilePane.setPrefRows(board.getRows());
+        tilePane.setPrefColumns(board.getCols());
+
+        for (int i = 0; i < board.getRows(); i++) {
+            for (int j = 0; j < board.getCols(); j++) {
                 Color color = grid[i][j].getState() ? Color.STEELBLUE : Color.WHITE;
                 Rectangle rect = new Rectangle(cellSizePx, cellSizePx, color);
                 tilePane.getChildren().add(rect);

@@ -3,6 +3,7 @@ package sample;
 /**
  * Created by valex on 23.3.16.
  */
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -15,7 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
@@ -23,8 +24,8 @@ import sample.core.Board;
 
 public class Controller implements Initializable {
 
-    private final int DEFAULT_SIZE = 15;
-    private final double DEFAULT_PROB = 0.3;
+    final static private int horBoardSz = 243, verBoardSz = 15, cellSpacePx = 35, cellSizePx = 30,
+            maxFreqensy = 300;
 
     @FXML
     private FlowPane base;
@@ -35,7 +36,7 @@ public class Controller implements Initializable {
     private HBox rootBox;
 
     @FXML
-    private TextField densityField, speedField;
+    private Slider densitySlide, freqSlide;
 
     private Board board;
 
@@ -43,21 +44,18 @@ public class Controller implements Initializable {
 
     private Timeline loop = null;
 
-    private int windowWidth = 750;
-    private int cellSizePx = 30;
-
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        createBoard(DEFAULT_SIZE, DEFAULT_PROB);
+        board = new Board();
+        createDisplay();
         attachResizeListener();
     }
 
     @FXML
     private void onRun(Event evt) {
         toggleButtons(false);
-        double speed = Double.parseDouble(speedField.getText());
-        loop = new Timeline(new KeyFrame(Duration.millis(speed), event -> {
+        loop = new Timeline(new KeyFrame(Duration.millis(maxFreqensy / freqSlide.getValue()), event -> {
             board.update();
             display.displayBoard(board);
         }));
@@ -74,7 +72,7 @@ public class Controller implements Initializable {
 
     @FXML
     private void onGenerate(Event evt) {
-        board.generate(Double.parseDouble(densityField.getText()) / 100);
+        board.generate(densitySlide.getValue());
         display.displayBoard(board);
     }
 
@@ -84,30 +82,43 @@ public class Controller implements Initializable {
         stopButton.setDisable(enable);
     }
 
-    private void createBoard(int size, double prob) {
-        board = new Board(size, size, prob);
-        createDisplay();
-    }
-
     private void createDisplay() {
-        display = new DisplayDriver(board.getSize(), cellSizePx, board);
+        display = new DisplayDriver(cellSizePx, board);
 
         base.getChildren().clear();
         base.getChildren().add(new Group(display.getPane()));
     }
 
     private void attachResizeListener() {
-        ChangeListener<Number> sizeListener = new ChangeListener<Number>() {
+        ChangeListener<Number> widthListener = new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                int newWidth = newValue.intValue();
-                if (newWidth > 250 && Math.abs(newWidth - windowWidth) >= 50) {
-                    windowWidth = newWidth;
-                    cellSizePx = newWidth / 25;
-                    createDisplay();
+                //Проверка, влезет ли еще столбец ячеек на панель
+                int newWidth = newValue.intValue() - horBoardSz;
+                if (newWidth > 0 && Math.abs(newWidth / cellSpacePx - board.getCols()) > 0) {
+                    board.changeCols(newWidth / cellSpacePx);
+                    display = new DisplayDriver(cellSizePx, board);
+
+                    base.getChildren().clear();
+                    base.getChildren().add(new Group(display.getPane()));
                 }
             }
         };
-        rootBox.widthProperty().addListener(sizeListener);
+        ChangeListener<Number> heightListener = new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                //Проверка, влезет ли еще ряд ячеек на панель
+                int newHeight = newValue.intValue() - verBoardSz;
+                if (newHeight > 0 && Math.abs(newHeight / cellSpacePx - board.getRows()) > 0) {
+                    board.changeRows(newHeight / cellSpacePx);
+                    display = new DisplayDriver(cellSizePx, board);
+
+                    base.getChildren().clear();
+                    base.getChildren().add(new Group(display.getPane()));
+                }
+            }
+        };
+        rootBox.widthProperty().addListener(widthListener);
+        rootBox.heightProperty().addListener(heightListener);
     }
 }
