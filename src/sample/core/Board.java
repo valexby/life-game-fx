@@ -5,18 +5,17 @@ package sample.core;
  */
 public class Board {
     private Cell[][] grid;
-    private int height;
-    private int width;
+    private int rows, cols;
 
-    public Board(Cell[][] grid) {
-        this.grid = grid;
-        height = width = grid.length;
+    public Board() {
+        cols = rows = 0;
+        grid = new Cell[0][0];
     }
 
-    public Board(int height, int width, double probState) {
-        this.height = height;
-        this.width = width;
-        grid = new Cell[height][width];
+    public Board(int rows, int cols, double probState) {
+        this.rows = rows;
+        this.cols = cols;
+        grid = new Cell[rows][cols];
         for (int i = 0; i < grid.length; i++)
             for (int j = 0; j < grid[i].length; j++)
                 grid[i][j] = null;
@@ -35,12 +34,38 @@ public class Board {
         }
     }
 
+    public void changeCols(int newCols) {
+        for (int i = 0; i < grid.length; i++) {
+            grid[i] = java.util.Arrays.copyOf(grid[i], newCols);
+            if (newCols > cols)
+                for (int j = cols; j < newCols; j++)
+                    grid[i][j] = new Cell();
+        }
+        cols = newCols;
+    }
+
+    public void changeRows(int newRows) {
+        grid = java.util.Arrays.copyOf(grid, newRows);
+        if (newRows > rows) {
+            for (int i = rows; i < newRows; i++) {
+                grid[i] = new Cell[cols];
+                for (int j = 0; j < cols; j++)
+                    grid[i][j] = new Cell();
+            }
+        }
+        rows = newRows;
+    }
+
     public Cell[][] getGrid() {
         return grid;
     }
 
-    public int getSize() {
-        return width;
+    public int getCols() {
+        return cols;
+    }
+
+    public int getRows() {
+        return rows;
     }
 
     public void update() {
@@ -62,10 +87,10 @@ public class Board {
             for (j = -1; j < 2; j++) {
                 curRow = row + i;
                 curCol = col + j;
-                if (curRow < 0) curRow = height - 1;
-                if (curCol < 0) curCol = width - 1;
-                if (curRow == height) curRow = 0;
-                if (curCol == width) curCol = 0;
+                if (curRow < 0) curRow = rows - 1;
+                if (curCol < 0) curCol = cols - 1;
+                if (curRow == rows) curRow = 0;
+                if (curCol == cols) curCol = 0;
                 if (grid[curRow][curCol].getState())
                     result++;
             }
