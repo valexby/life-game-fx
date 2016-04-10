@@ -26,7 +26,7 @@ import sample.core.Board;
 public class Controller implements Initializable {
 
     final static private int horBoardSz = 243, verBoardSz = 15, cellSpacePx = 35, cellSizePx = 30,
-            maxFreqency = 300;
+            maxFrequency = 300;
 
     @FXML
     private FlowPane base;
@@ -74,7 +74,15 @@ public class Controller implements Initializable {
     @FXML
     private void onFreqChanged(Event evt) {
         if (loop.getStatus() == Animation.Status.RUNNING)
-           loopStart(loop);
+            loopStart(loop);
+    }
+
+    @FXML
+    private void onClean(Event evt) {
+        if (loop!=null && loop.getStatus() == Animation.Status.RUNNING)
+            onStop(evt);
+        board.resetGrid();
+        display.displayBoard(board);
     }
 
     private void toggleButtons(boolean enable) {
@@ -83,14 +91,14 @@ public class Controller implements Initializable {
         stopButton.setDisable(enable);
     }
 
-    private void loopStart(Timeline oldLoop){
-        loop = new Timeline(new KeyFrame(Duration.millis(maxFreqency / freqSlider.getValue()), event -> {
+    private void loopStart(Timeline oldLoop) {
+        loop = new Timeline(new KeyFrame(Duration.millis(maxFrequency / freqSlider.getValue()), event -> {
             board.update();
             display.displayBoard(board);
         }));
 
-        loop.setCycleCount(200);
-        if (oldLoop!=null) oldLoop.stop();
+        loop.setCycleCount(Animation.INDEFINITE);
+        if (oldLoop != null) oldLoop.stop();
         loop.play();
     }
 
