@@ -75,6 +75,16 @@ public class Board {
         rows = newRows;
     }
 
+    public void injectBoard(Board invader, int colPos, int rowPos) {
+        if (invader.getRows() > rows || invader.getCols() > cols)
+            return;
+        for (int i=0;i<invader.getRows();i++)
+            for (int j=0;j<invader.getCols();j++)
+            {
+
+            }
+    }
+
     public void update() {
         int i, j, around;
         for (i = 0; i < rows; i++)
@@ -104,10 +114,8 @@ public class Board {
         return result;
     }
 
-    private void commit() {
+    public void commit() {
         grid.parallelStream().forEach(i -> i.parallelStream()
                 .forEach(j -> j.updateState()));
     }
-
-
 }

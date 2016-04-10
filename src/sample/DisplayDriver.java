@@ -21,15 +21,13 @@ public class DisplayDriver {
         tilePane.setPrefRows(board.getRows());
         tilePane.setPrefColumns(board.getCols());
 
-        for (int i = 0; i < board.getRows(); i++) {
-            for (int j = 0; j < board.getCols(); j++) {
-                Color color = grid[i][j].getState() ? Color.STEELBLUE : Color.WHITE;
+        for (Cell[] i : grid)
+            for (Cell j : i) {
+                Color color = j.getState() ? Color.STEELBLUE : Color.WHITE;
                 Rectangle rect = new Rectangle(cellSizePx, cellSizePx, color);
                 tilePane.getChildren().add(rect);
-
-                attachListeners(rect, grid[i][j]);
+                attachListeners(rect, j);
             }
-        }
     }
 
     public void displayBoard(Board board) {

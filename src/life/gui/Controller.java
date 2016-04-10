@@ -5,6 +5,8 @@ package life.gui;
  */
 
 import java.beans.Expression;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -17,12 +19,14 @@ import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import life.core.Board;
+import life.core.FileInterface;
 
 public class Controller implements Initializable {
 
@@ -42,6 +46,8 @@ public class Controller implements Initializable {
 
     private Board board;
 
+    private FileInterface fileInterface;
+
     private DisplayDriver display;
 
     private Timeline loop = null;
@@ -50,6 +56,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         board = new Board();
+        fileInterface = new FileInterface();
         createDisplay();
         attachResizeListeners();
     }
@@ -86,9 +93,38 @@ public class Controller implements Initializable {
         display.displayBoard(board);
     }
 
+    @FXML
+    private void onLoad(Event evt) {
+        try {
+            board = fileInterface.loadBoard("File");
+            createDisplay();
+        }
+        catch (Exception ex)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Load Error");
+            alert.setHeaderText("Load error occurred");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
+        createDisplay();
+    }
+
+    @FXML
+    private void onSave(Event evt) {
+        try { fileInterface.saveGrid("File", board.getGrid()); }
+        catch (Exception ex)
+        {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Save Error");
+            alert.setHeaderText("Save error occurred");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
+    }
+
     private void toggleButtons(boolean enable) {
         runButton.setDisable(!enable);
-
         stopButton.setDisable(enable);
     }
 
@@ -142,5 +178,5 @@ public class Controller implements Initializable {
             SizeSetter setter = board::setRows;
             resizeInterface(oldValue, newValue, verticalBorderSz, getter, setter);
         });
-    }
+   }
 }

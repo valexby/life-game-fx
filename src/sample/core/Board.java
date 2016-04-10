@@ -11,27 +11,16 @@ public class Board {
         cols = rows = 0;
         grid = new Cell[0][0];
     }
-
-    public Board(int rows, int cols, double probState) {
-        this.rows = rows;
-        this.cols = cols;
-        grid = new Cell[rows][cols];
-        for (int i = 0; i < grid.length; i++)
-            for (int j = 0; j < grid[i].length; j++)
-                grid[i][j] = null;
-        generate(probState);
-    }
-
+    
     public void generate(double probState) {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                if (grid[i][j] == null) grid[i][j] = new Cell();
+        for (Cell[] i : grid)
+            for (Cell j : i) {
+                if (j == null) j = new Cell();
                 if (Math.random() <= probState) {
-                    grid[i][j].setNewState(true);
-                    grid[i][j].updateState();
+                    j.setNewState(true);
+                    j.updateState();
                 }
             }
-        }
     }
 
     public void changeCols(int newCols) {
@@ -58,6 +47,14 @@ public class Board {
 
     public Cell[][] getGrid() {
         return grid;
+    }
+
+    public void resetGrid() {
+        for (Cell[] i : grid)
+            for (Cell j : i) {
+                j.setNewState(false);
+                j.updateState();
+            }
     }
 
     public int getCols() {
@@ -98,11 +95,9 @@ public class Board {
     }
 
     private void commit() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[i].length; j++) {
-                grid[i][j].updateState();
-            }
-        }
+        for (Cell[] i : grid)
+            for (Cell j : i)
+                j.updateState();
     }
 
 
