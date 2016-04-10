@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_43ee7b23",
+        "filename": "src/sample/Controller.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-04-10T11:17:40Z",
+      "side": 1,
+      "message": "Не ссы писать имена в 100 символов, это ведь жаба, тут за такое не пиздят палками",
+      "range": {
+        "startLine": 27,
+        "startChar": 29,
+        "endLine": 27,
+        "endChar": 39
+      },
+      "revId": "04dc417b0af23ce48e9a19ec6047adf94b81867e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_03f873e4",
+        "filename": "src/sample/Controller.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-04-10T11:17:40Z",
+      "side": 1,
+      "message": "А можно дублированный код вынести в отдельный метод через женерики?",
+      "revId": "04dc417b0af23ce48e9a19ec6047adf94b81867e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_0381934a",
+        "filename": "src/sample/DisplayDriver.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-04-10T11:17:40Z",
+      "side": 1,
+      "message": "Луцик, привет",
+      "range": {
+        "startLine": 14,
+        "startChar": 16,
+        "endLine": 14,
+        "endChar": 18
+      },
+      "revId": "04dc417b0af23ce48e9a19ec6047adf94b81867e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_e3afcfe1",
+        "filename": "src/sample/core/Board.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-04-10T11:17:40Z",
+      "side": 1,
+      "message": "Very ponyatno",
+      "revId": "04dc417b0af23ce48e9a19ec6047adf94b81867e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_63829f54",
+        "filename": "src/sample/core/Board.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-04-10T11:17:40Z",
+      "side": 1,
+      "message": "Курвы поменять на current",
+      "range": {
+        "startLine": 85,
+        "startChar": 20,
+        "endLine": 85,
+        "endChar": 26
+      },
+      "revId": "04dc417b0af23ce48e9a19ec6047adf94b81867e",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
