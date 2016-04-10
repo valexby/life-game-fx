@@ -2,9 +2,6 @@ package life.core;
 
 import java.util.ArrayList;
 
-/**
- * Created by valex on 23.3.16.
- */
 public class Board {
     private ArrayList<ArrayList<Cell>> grid;
     private int rows, cols;
@@ -65,14 +62,24 @@ public class Board {
         if (newRows > rows) {
             for (int i = rows; i < newRows; i++) {
                 grid.add(new ArrayList<>());
-                for (int j = 0; j<cols; j++)
+                for (int j = 0; j < cols; j++)
                     grid.get(i).add(new Cell());
             }
-        }
-        else
-            for (int i = rows-1; i>=newRows; i--)
+        } else
+            for (int i = rows - 1; i >= newRows; i--)
                 grid.remove(i);
         rows = newRows;
+    }
+
+    public void injectBoard(Board invader, int rowPos, int colPos) {
+        if (invader.getRows() > rows || invader.getCols() > cols)
+            return;
+        for (int i = 0; i < invader.getRows(); i++)
+            for (int j = 0; j < invader.getCols(); j++)
+                grid.get((rowPos + i < rows) ? rowPos + i : rowPos + i - rows).
+                        get((colPos + j < cols) ? colPos + j : colPos + j - cols).
+                        setNewState(invader.getGrid().get(i).get(j).getState());
+        commit();
     }
 
     public void update() {
@@ -104,10 +111,8 @@ public class Board {
         return result;
     }
 
-    private void commit() {
+    public void commit() {
         grid.parallelStream().forEach(i -> i.parallelStream()
                 .forEach(j -> j.updateState()));
     }
-
-
 }

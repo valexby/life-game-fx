@@ -67,6 +67,8 @@
                         <Insets top="10.0"/>
                     </VBox.margin>
                 </Button>
+                <Button mnemonicParsing="false" onAction="#onSave" text="Save"/>
+                <Button mnemonicParsing="false" onAction="#onLoad" text="Load"/>
             </children>
             <padding>
                 <Insets right="10.0"/>

@@ -1,11 +1,10 @@
 package life.gui;
 
-/**
- * Created by valex on 23.3.16.
- */
+import java.net.URL;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -17,12 +16,23 @@ public class Main extends Application {
         launch(args);
     }
 
+    private FXMLLoader fxmlLoader;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent parent = FXMLLoader.load(getClass().getResource("gui.fxml"));
+        URL location = getClass().getResource("gui.fxml");
+        fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(location);
+        fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
+        Parent parent = fxmlLoader.load(location.openStream());
 
         primaryStage.setTitle("Game of Life");
         primaryStage.setScene(new Scene(parent));
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() {
+        ((Controller) fxmlLoader.getController()).engineThread.interrupt();
     }
 }

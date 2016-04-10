@@ -1,8 +1,5 @@
 package life.core;
 
-/**
- * Created by valex on 23.3.16.
- */
 public class Cell {
     private boolean state = false;
     private boolean newState;

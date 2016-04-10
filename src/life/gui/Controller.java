@@ -1,33 +1,27 @@
 package life.gui;
 
-/**
- * Created by valex on 23.3.16.
- */
-
-import java.beans.Expression;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.util.Duration;
 import life.core.Board;
+import life.core.Cell;
+import life.core.FileInterface;
 
 public class Controller implements Initializable {
 
-    final static private int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 4, cellSizePx = 3,
-            maxFrequency = 300;
+    private final static int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 4, cellSizePx = 3;
+    private final static long maxFrequency = 300;
 
     @FXML
     private FlowPane base;
@@ -44,68 +38,145 @@ public class Controller implements Initializable {
 
     private DisplayDriver display;
 
-    private Timeline loop = null;
+    private GridLoadThread gridLoadThread = null;
 
+    private GridSaveThread gridSaveThread = null;
+
+    EngineThread engineThread = new EngineThread();
+
+    private class GridLoadThread extends Thread {
+        @Override
+        public void run() {
+            try {
+                Board temp = FileInterface.loadBoard("File");
+                synchronized (board) {
+                    board.injectBoard(temp, 0, 0);
+                    display.displayBoard(board);
+                }
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Load Error");
+                alert.setHeaderText("Load error occurred");
+                alert.setContentText(ex.getMessage());
+                alert.showAndWait();
+            }
+            return;
+        }
+    }
+
+    private class GridSaveThread extends Thread {
+        @Override
+        public void run() {
+            int cols, rows;
+            ArrayList<Boolean> buffer;
+            try {
+                synchronized (board) {
+                    rows = board.getRows();
+                    cols = board.getCols();
+                    buffer = new ArrayList<>(rows * cols);
+                    for (ArrayList <Cell> i : board.getGrid())
+                        for (Cell j : i)
+                            buffer.add(j.getState());
+                }
+                FileInterface.saveGrid("File", buffer, rows, cols);
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Save Error");
+                alert.setHeaderText("Save error occurred");
+                alert.setContentText(ex.getMessage());
+                alert.showAndWait();
+            }
+            return;
+        }
+    }
+
+    class EngineThread extends Thread {
+
+        private long currentFrequency;
+
+        public void setFrequency(long newFrequency) {
+            currentFrequency = newFrequency;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                synchronized (board) {
+                    board.update();
+                    display.displayBoard(board);
+                }
+                try {
+                    sleep(Math.round(maxFrequency / currentFrequency));
+                } catch (InterruptedException ex) {
+                    return;
+                }
+            }
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         board = new Board();
-        createDisplay();
         attachResizeListeners();
     }
 
     @FXML
     private void onRun(Event evt) {
         toggleButtons(false);
-        loopStart(null);
+        engineThread = new EngineThread();
+        engineThread.setFrequency(Math.round(freqSlider.getValue()));
+        engineThread.start();
     }
 
     @FXML
     private void onStop(Event evt) {
         toggleButtons(true);
-        loop.stop();
+        engineThread.interrupt();
     }
 
     @FXML
     private void onGenerate(Event evt) {
-        board.generate(densitySlider.getValue());
-        display.displayBoard(board);
+        synchronized (board) {
+            board.generate(densitySlider.getValue());
+        }
+        if (!engineThread.isAlive())
+            display.displayBoard(board);
     }
 
     @FXML
     private void onFreqChanged(Event evt) {
-        if (loop.getStatus() == Animation.Status.RUNNING)
-            loopStart(loop);
+        engineThread.setFrequency(Math.round(freqSlider.getValue()));
     }
 
     @FXML
     private void onClean(Event evt) {
-        if (loop != null && loop.getStatus() == Animation.Status.RUNNING)
+        if (engineThread.isAlive())
             onStop(evt);
         board.resetGrid();
         display.displayBoard(board);
     }
 
-    private void toggleButtons(boolean enable) {
-        runButton.setDisable(!enable);
-
-        stopButton.setDisable(enable);
+    @FXML
+    private void onLoad(Event evt) {
+        if (gridLoadThread != null && gridLoadThread.isAlive()) return;
+        gridLoadThread = new GridLoadThread();
+        gridLoadThread.start();
     }
 
-    private void loopStart(Timeline oldLoop) {
-        loop = new Timeline(new KeyFrame(Duration.millis(maxFrequency / freqSlider.getValue()), event -> {
-            board.update();
-            display.displayBoard(board);
-        }));
+    @FXML
+    private void onSave(Event evt) {
+        if (gridSaveThread != null && gridSaveThread.isAlive()) return;
+        gridSaveThread = new GridSaveThread();
+        gridSaveThread.start();
+    }
 
-        loop.setCycleCount(Animation.INDEFINITE);
-        if (oldLoop != null) oldLoop.stop();
-        loop.play();
+    private void toggleButtons(boolean enable) {
+        runButton.setDisable(!enable);
+        stopButton.setDisable(enable);
     }
 
     private void createDisplay() {
         display = new DisplayDriver(cellSizePx, board);
-
         base.getChildren().clear();
         base.getChildren().add(new Group(display.getPane()));
     }
@@ -120,14 +191,13 @@ public class Controller implements Initializable {
         int getSize();
     }
 
-    private void resizeInterface(Number oldValue, Number newValue, int borderSize, SizeGetter getter, SizeSetter setter){
+    private void resizeInterface(Number oldValue, Number newValue, int borderSize, SizeGetter getter, SizeSetter setter) {
         int newSize = newValue.intValue() - borderSize;
-        if (newSize > 0 && Math.abs(newSize / cellSpacePx - getter.getSize()) > 0) {
-            setter.resize(newSize / cellSpacePx);
-            display = new DisplayDriver(cellSizePx, board);
-
-            base.getChildren().clear();
-            base.getChildren().add(new Group(display.getPane()));
+        synchronized (board) {
+            if (newSize > 0 && Math.abs(newSize / cellSpacePx - getter.getSize()) > 0) {
+                setter.resize(newSize / cellSpacePx);
+                createDisplay();
+            }
         }
     }
 
@@ -135,7 +205,7 @@ public class Controller implements Initializable {
         rootBox.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             SizeGetter getter = board::getCols;
             SizeSetter setter = board::setCols;
-                resizeInterface(oldValue, newValue, horizontalBorderSz, getter, setter);
+            resizeInterface(oldValue, newValue, horizontalBorderSz, getter, setter);
         });
         rootBox.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             SizeGetter getter = board::getRows;
