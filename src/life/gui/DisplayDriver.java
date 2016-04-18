@@ -17,7 +17,7 @@ public class DisplayDriver {
 
     public DisplayDriver(int cellSizePx, Board board) {
         ArrayList<ArrayList<Cell>> grid = board.getGrid();
-        tilePane = new TilePane(5, 5);
+        tilePane = new TilePane(1, 1);
         tilePane.setPrefRows(board.getRows());
         tilePane.setPrefColumns(board.getCols());
 

@@ -26,7 +26,7 @@ import life.core.Board;
 
 public class Controller implements Initializable {
 
-    final static private int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 35, cellSizePx = 30,
+    final static private int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 4, cellSizePx = 3,
             maxFrequency = 300;
 
     @FXML
