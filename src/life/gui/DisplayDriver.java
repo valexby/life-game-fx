@@ -1,9 +1,5 @@
 package life.gui;
 
-/**
- * Created by valex on 23.3.16.
- */
-
 import java.util.ArrayList;
 
 import javafx.scene.layout.TilePane;
