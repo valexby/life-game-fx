@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_c40f032d",
+        "filename": "src/life/core/FileInterface.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-04-20T18:02:40Z",
+      "side": 1,
+      "message": "Если хошь, то можешь это говно вынести в своеобразный конструктор или init функцию, бо оно повторяется тут и тама",
+      "range": {
+        "startLine": 16,
+        "startChar": 13,
+        "endLine": 17,
+        "endChar": 77
+      },
+      "revId": "8608cd41b4ead5d509244f50dfcb962122b9f8ec",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
