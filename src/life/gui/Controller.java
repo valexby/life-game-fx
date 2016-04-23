@@ -1,7 +1,7 @@
 package life.gui;
 
+import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ObservableValue;
@@ -11,127 +11,95 @@ import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import life.Threads.BotThread;
+import life.Threads.EngineThread;
+import life.Threads.GridLoaderThread;
+import life.Threads.GridSaverThread;
+import life.Threads.SavesListThread;
+import life.Util.Bot;
 import life.core.Board;
-import life.core.Cell;
-import life.core.FileInterface;
 
 public class Controller implements Initializable {
 
-    private final static int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 4, cellSizePx = 3;
-    private final static long maxFrequency = 300;
-
+    private final static int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 5, cellSizePx = 4;
+    private final static String savePath = "saves/";
+    @FXML
+    public ListView<String> savesList;
+    public Board board;
+    public DisplayDriver display;
+    public Bot bot;
+    public SavesListThread savesListThread = null;
+    EngineThread engineThread = new EngineThread(this);
+    BotThread botThread = new BotThread(this);
     @FXML
     private FlowPane base;
     @FXML
-    private Button runButton, stopButton;
-
+    private Button lifeButton, botButton;
     @FXML
     private HBox rootBox;
-
     @FXML
-    private Slider densitySlider, freqSlider;
+    private Slider densitySlider, engineFreqSlider, botFreqSlider;
+    @FXML
+    private TextField saveField;
+    private GridLoaderThread gridLoadThread = null;
+    private GridSaverThread gridSaveThread = null;
 
-    private Board board;
-
-    private DisplayDriver display;
-
-    private GridLoadThread gridLoadThread = null;
-
-    private GridSaveThread gridSaveThread = null;
-
-    EngineThread engineThread = new EngineThread();
-
-    private class GridLoadThread extends Thread {
-        @Override
-        public void run() {
-            try {
-                Board temp = FileInterface.loadBoard("File");
-                synchronized (board) {
-                    board.injectBoard(temp, 0, 0);
-                    display.displayBoard(board);
-                }
-            } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Load Error");
-                alert.setHeaderText("Load error occurred");
-                alert.setContentText(ex.getMessage());
-                alert.showAndWait();
-            }
-            return;
-        }
-    }
-
-    private class GridSaveThread extends Thread {
-        @Override
-        public void run() {
-            int cols, rows;
-            ArrayList<Boolean> buffer;
-            try {
-                synchronized (board) {
-                    rows = board.getRows();
-                    cols = board.getCols();
-                    buffer = new ArrayList<>(rows * cols);
-                    for (ArrayList <Cell> i : board.getGrid())
-                        for (Cell j : i)
-                            buffer.add(j.getState());
-                }
-                FileInterface.saveGrid("File", buffer, rows, cols);
-            } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Save Error");
-                alert.setHeaderText("Save error occurred");
-                alert.setContentText(ex.getMessage());
-                alert.showAndWait();
-            }
-            return;
-        }
-    }
-
-    class EngineThread extends Thread {
-
-        private long currentFrequency;
-
-        public void setFrequency(long newFrequency) {
-            currentFrequency = newFrequency;
-        }
-
-        @Override
-        public void run() {
-            while (true) {
-                synchronized (board) {
-                    board.update();
-                    display.displayBoard(board);
-                }
-                try {
-                    sleep(Math.round(maxFrequency / currentFrequency));
-                } catch (InterruptedException ex) {
-                    return;
-                }
-            }
-        }
+    /**
+     * Prints dialog with error message
+     */
+    public void showErrorMessage(String headerText, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(headerText);
+        alert.setContentText(message);
+        alert.show();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         board = new Board();
         attachResizeListeners();
+        try {
+            bot = new Bot();
+        } catch (Exception ex) {
+            showErrorMessage("BotThread Error", ex.getMessage());
+        }
+        savesListThread = new SavesListThread(this);
+        savesListThread.run();
     }
 
     @FXML
-    private void onRun(Event evt) {
-        toggleButtons(false);
-        engineThread = new EngineThread();
-        engineThread.setFrequency(Math.round(freqSlider.getValue()));
-        engineThread.start();
+    private void onLifeControl(Event evt) {
+        if (engineThread.isAlive()) {
+            lifeButton.setText("Run");
+            engineThread.interrupt();
+            if (botThread.isAlive()) onBotControl(evt);
+            botButton.setDisable(true);
+        } else {
+            lifeButton.setText("Stop");
+            engineThread = new EngineThread(this);
+            engineThread.setFrequency(Math.round(engineFreqSlider.getValue()));
+            engineThread.start();
+            botButton.setDisable(false);
+        }
     }
 
     @FXML
-    private void onStop(Event evt) {
-        toggleButtons(true);
-        engineThread.interrupt();
+    private void onBotControl(Event evt) {
+        if (botThread.isAlive()) {
+            botButton.setText("Run Bot");
+            botThread.interrupt();
+        } else {
+            botButton.setText("Stop Bot");
+            botThread = new BotThread(this);
+            botThread.setFrequency(Math.round(botFreqSlider.getValue()));
+            botThread.start();
+        }
     }
 
     @FXML
@@ -144,14 +112,19 @@ public class Controller implements Initializable {
     }
 
     @FXML
-    private void onFreqChanged(Event evt) {
-        engineThread.setFrequency(Math.round(freqSlider.getValue()));
+    private void onEngineFreqChanged(Event evt) {
+        engineThread.setFrequency(Math.round(engineFreqSlider.getValue()));
+    }
+
+    @FXML
+    private void onBotFreqChanged(Event evt) {
+        botThread.setFrequency(Math.round(botFreqSlider.getValue()));
     }
 
     @FXML
     private void onClean(Event evt) {
         if (engineThread.isAlive())
-            onStop(evt);
+            onLifeControl(evt);
         board.resetGrid();
         display.displayBoard(board);
     }
@@ -159,36 +132,31 @@ public class Controller implements Initializable {
     @FXML
     private void onLoad(Event evt) {
         if (gridLoadThread != null && gridLoadThread.isAlive()) return;
-        gridLoadThread = new GridLoadThread();
+        gridLoadThread = new GridLoaderThread(this, savesList.getSelectionModel().getSelectedItem());
         gridLoadThread.start();
     }
 
     @FXML
     private void onSave(Event evt) {
         if (gridSaveThread != null && gridSaveThread.isAlive()) return;
-        gridSaveThread = new GridSaveThread();
+        String fileName = saveField.getText();
+        gridSaveThread = new GridSaverThread(this, fileName);
         gridSaveThread.start();
     }
 
-    private void toggleButtons(boolean enable) {
-        runButton.setDisable(!enable);
-        stopButton.setDisable(enable);
+    @FXML
+    private void onSaveDelete(Event evt) {
+        new File(savePath + savesList.getSelectionModel().getSelectedItem()).delete();
+        String buffer = savesList.getSelectionModel().getSelectedItem();
+        savesList.setEditable(false);
+        savesList.getItems().remove(buffer);
+        savesList.setEditable(true);
     }
 
     private void createDisplay() {
         display = new DisplayDriver(cellSizePx, board);
         base.getChildren().clear();
         base.getChildren().add(new Group(display.getPane()));
-    }
-
-    @FunctionalInterface
-    private interface SizeSetter {
-        void resize(int size);
-    }
-
-    @FunctionalInterface
-    private interface SizeGetter {
-        int getSize();
     }
 
     private void resizeInterface(Number oldValue, Number newValue, int borderSize, SizeGetter getter, SizeSetter setter) {
@@ -212,5 +180,15 @@ public class Controller implements Initializable {
             SizeSetter setter = board::setRows;
             resizeInterface(oldValue, newValue, verticalBorderSz, getter, setter);
         });
+    }
+
+    @FunctionalInterface
+    private interface SizeSetter {
+        void resize(int size);
+    }
+
+    @FunctionalInterface
+    private interface SizeGetter {
+        int getSize();
     }
 }

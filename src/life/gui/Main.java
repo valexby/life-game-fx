@@ -12,11 +12,11 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private FXMLLoader fxmlLoader;
+
     public static void main(String[] args) {
         launch(args);
     }
-
-    private FXMLLoader fxmlLoader;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -34,5 +34,6 @@ public class Main extends Application {
     @Override
     public void stop() {
         ((Controller) fxmlLoader.getController()).engineThread.interrupt();
+        //((Controller) fxmlLoader.getController()).botThread.interrupt();
     }
 }

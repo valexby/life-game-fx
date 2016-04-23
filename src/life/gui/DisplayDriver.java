@@ -8,9 +8,16 @@ import javafx.scene.shape.Rectangle;
 import life.core.Board;
 import life.core.Cell;
 
+/**
+ * Interface between abstract board model and physical graphic interface
+ */
 public class DisplayDriver {
     private TilePane tilePane;
 
+    /**
+     * @param cellSizePx size of cell in pixels
+     * @param board      abstract model to draw
+     */
     public DisplayDriver(int cellSizePx, Board board) {
         ArrayList<ArrayList<Cell>> grid = board.getGrid();
         tilePane = new TilePane(1, 1);
@@ -25,6 +32,11 @@ public class DisplayDriver {
         }));
     }
 
+    /**
+     * Draw board to screen
+     *
+     * @param board board to draw
+     */
     public void displayBoard(Board board) {
         ArrayList<ArrayList<Cell>> grid = board.getGrid();
         for (int i = 0; i < board.getRows(); i++) {
@@ -39,6 +51,12 @@ public class DisplayDriver {
         return tilePane;
     }
 
+    /**
+     * Attach listeners to play board elements
+     *
+     * @param rect element to attach
+     * @param cell cell represents by rectangle element
+     */
     private void attachListeners(Rectangle rect, Cell cell) {
 
         rect.setOnMouseClicked(event -> {
