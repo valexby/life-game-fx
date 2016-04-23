@@ -1,17 +1,24 @@
 package life.gui;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import life.core.Board;
@@ -22,6 +29,7 @@ public class Controller implements Initializable {
 
     private final static int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 4, cellSizePx = 3;
     private final static long maxFrequency = 300;
+    private final static String savePath = "saves";
 
     @FXML
     private FlowPane base;
@@ -34,6 +42,12 @@ public class Controller implements Initializable {
     @FXML
     private Slider densitySlider, freqSlider;
 
+    @FXML
+    private TextField saveField;
+
+    @FXML
+    private ListView<String> savesList;
+
     private Board board;
 
     private DisplayDriver display;
@@ -42,29 +56,60 @@ public class Controller implements Initializable {
 
     private GridSaveThread gridSaveThread = null;
 
+    private SavesListThread savesListThread = null;
+
     EngineThread engineThread = new EngineThread();
 
     private class GridLoadThread extends Thread {
+
+        private String fileName;
+
+        public GridLoadThread(String fileName) {
+            this.fileName = fileName;
+        }
+
         @Override
         public void run() {
+
             try {
-                Board temp = FileInterface.loadBoard("File");
+                Platform.runLater(() -> savesList.getSelectionModel().clearSelection());
+                if (fileName == null)
+                    return;
+                Board temp = FileInterface.loadBoard(savePath + '/' + fileName);
                 synchronized (board) {
                     board.injectBoard(temp, 0, 0);
                     display.displayBoard(board);
                 }
             } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Load Error");
-                alert.setHeaderText("Load error occurred");
-                alert.setContentText(ex.getMessage());
-                alert.showAndWait();
+                Platform.runLater(() -> showErrorMessage("Load error occurred", ex.getMessage()));
             }
-            return;
+        }
+    }
+
+    private class SavesListThread extends Thread {
+        @Override
+        public void run() {
+            File saveDir = new File(savePath);
+            if (!saveDir.canRead()) {
+                if (!saveDir.mkdir())
+                    Platform.runLater(() -> showErrorMessage("Saves directory error", saveDir.getPath()));
+                return;
+            }
+            ObservableList<String> buffer = FXCollections.observableArrayList();
+            buffer.addAll(saveDir.list());
+            Collections.sort(buffer);
+            Platform.runLater(() -> savesList.setItems(buffer));
         }
     }
 
     private class GridSaveThread extends Thread {
+
+        private String fileName;
+
+        public GridSaveThread(String fileName) {
+            this.fileName = fileName;
+        }
+
         @Override
         public void run() {
             int cols, rows;
@@ -74,19 +119,15 @@ public class Controller implements Initializable {
                     rows = board.getRows();
                     cols = board.getCols();
                     buffer = new ArrayList<>(rows * cols);
-                    for (ArrayList <Cell> i : board.getGrid())
+                    for (ArrayList<Cell> i : board.getGrid())
                         for (Cell j : i)
                             buffer.add(j.getState());
                 }
-                FileInterface.saveGrid("File", buffer, rows, cols);
+                FileInterface.saveGrid(savePath + '/' + fileName, buffer, rows, cols);
+                savesListThread.run();
             } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Save Error");
-                alert.setHeaderText("Save error occurred");
-                alert.setContentText(ex.getMessage());
-                alert.showAndWait();
+                Platform.runLater(() -> showErrorMessage("Save error occurred", ex.getMessage()));
             }
-            return;
         }
     }
 
@@ -114,10 +155,20 @@ public class Controller implements Initializable {
         }
     }
 
+    private void showErrorMessage(String headerText, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(headerText);
+        alert.setContentText(message);
+        alert.show();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         board = new Board();
         attachResizeListeners();
+        savesListThread = new SavesListThread();
+        savesListThread.run();
     }
 
     @FXML
@@ -159,15 +210,25 @@ public class Controller implements Initializable {
     @FXML
     private void onLoad(Event evt) {
         if (gridLoadThread != null && gridLoadThread.isAlive()) return;
-        gridLoadThread = new GridLoadThread();
+        gridLoadThread = new GridLoadThread(savesList.getSelectionModel().getSelectedItem());
         gridLoadThread.start();
     }
 
     @FXML
     private void onSave(Event evt) {
         if (gridSaveThread != null && gridSaveThread.isAlive()) return;
-        gridSaveThread = new GridSaveThread();
+        String fileName = saveField.getText();
+        gridSaveThread = new GridSaveThread(fileName);
         gridSaveThread.start();
+    }
+
+    @FXML
+    private void onSaveDelete(Event evt) {
+        new File(savePath + '/' + savesList.getSelectionModel().getSelectedItem()).delete();
+        String buffer = savesList.getSelectionModel().getSelectedItem();
+        savesList.setEditable(false);
+        savesList.getItems().remove(buffer);
+        savesList.setEditable(true);
     }
 
     private void toggleButtons(boolean enable) {

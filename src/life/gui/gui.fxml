@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
@@ -67,8 +72,37 @@
                         <Insets top="10.0"/>
                     </VBox.margin>
                 </Button>
-                <Button mnemonicParsing="false" onAction="#onSave" text="Save"/>
-                <Button mnemonicParsing="false" onAction="#onLoad" text="Load"/>
+                <Accordion>
+                    <panes>
+                        <TitledPane animated="false" expanded="false" text="Save">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="26.0"
+                                            prefWidth="208.0">
+                                    <children>
+                                        <TextField fx:id="saveField" onAction="#onSave"
+                                                   prefHeight="26.0" prefWidth="208.0"/>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </TitledPane>
+                        <TitledPane animated="false" expanded="false" text="Load">
+                            <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0"
+                                            prefWidth="200.0">
+                                    <children>
+                                        <ListView fx:id="savesList"
+                                                  onContextMenuRequested="#onSaveDelete"
+                                                  onMouseClicked="#onLoad" prefHeight="160.0"
+                                                  prefWidth="208.0"/>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </TitledPane>
+                    </panes>
+                    <padding>
+                        <Insets top="10.0"/>
+                    </padding>
+                </Accordion>
             </children>
             <padding>
                 <Insets right="10.0"/>
