@@ -2,6 +2,9 @@ package life.core;
 
 import java.util.ArrayList;
 
+/**
+ * Model of abstract game board.
+ * */
 public class Board {
     private ArrayList<ArrayList<Cell>> grid;
     private int rows, cols;
@@ -11,6 +14,10 @@ public class Board {
         grid = new ArrayList<>();
     }
 
+    /**
+     * Generate cells on game board
+     * @param  probState cell's probability to be alive
+     * */
     public void generate(double probState) {
         grid.parallelStream()
                 .forEach(i -> i.parallelStream()
@@ -26,7 +33,9 @@ public class Board {
     public ArrayList<ArrayList<Cell>> getGrid() {
         return grid;
     }
-
+    /**
+     * Kill all cells on board
+     * */
     public void resetGrid() {
         grid.parallelStream().forEach(i -> i.parallelStream().forEach(j -> {
             j.setNewState(false);
@@ -42,6 +51,10 @@ public class Board {
         return rows;
     }
 
+    /**
+     * Horizontal board resize
+     * @param newCols new cols count
+     * */
     public void setCols(int newCols) {
         if (cols == newCols) return;
         if (newCols > cols)
@@ -56,7 +69,10 @@ public class Board {
             });
         cols = newCols;
     }
-
+    /**
+     * Vertical board resize
+     * @param newRows new rows count
+     * */
     public void setRows(int newRows) {
         if (rows == newRows) return;
         if (newRows > rows) {
@@ -71,7 +87,14 @@ public class Board {
         rows = newRows;
     }
 
+    /**
+     * Inject other board in current board
+     * @param invader board to inject
+     * @param colPos col index of invader position in current board
+     * @param rowPos row index of invader position in current board
+     * */
     public void injectBoard(Board invader, int rowPos, int colPos) {
+        if (invader == null) return;
         if (invader.getRows() > rows || invader.getCols() > cols)
             return;
         for (int i = 0; i < invader.getRows(); i++)
@@ -82,6 +105,9 @@ public class Board {
         commit();
     }
 
+    /**
+     * Compute next cell's condition
+     * */
     public void update() {
         int i, j, around;
         for (i = 0; i < rows; i++)
@@ -95,6 +121,12 @@ public class Board {
         commit();
     }
 
+    /**
+     * Seek for live cells around current cell
+     * @param row current cell's row index
+     * @param col current cell's col index
+     * @return count of live cells around
+     * */
     private int liveAround(int row, int col) { //считает количество живых клеток по соседству
         int currentRow, currentCol, i, j, result = grid.get(row).get(col).getState() ? -1 : 0; //не включаем текущую
         for (i = -1; i < 2; i++) //считает поличество живых клеток в квадрате 3х3 с центров в [row][col]
@@ -111,6 +143,9 @@ public class Board {
         return result;
     }
 
+    /**
+     * Set's to all cells their new state
+     * */
     public void commit() {
         grid.parallelStream().forEach(i -> i.parallelStream()
                 .forEach(j -> j.updateState()));
