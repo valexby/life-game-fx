@@ -72,6 +72,7 @@ public class Board {
     }
 
     public void injectBoard(Board invader, int rowPos, int colPos) {
+        if (invader == null) return;
         if (invader.getRows() > rows || invader.getCols() > cols)
             return;
         for (int i = 0; i < invader.getRows(); i++)
