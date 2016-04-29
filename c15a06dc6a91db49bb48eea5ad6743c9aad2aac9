@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_a9003702",
+        "filename": "src/life/Threads/GridLoaderThread.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "Use this variation if(){}",
+      "range": {
+        "startLine": 23,
+        "startChar": 10,
+        "endLine": 24,
+        "endChar": 23
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_690a2f23",
+        "filename": "src/life/Threads/SavesListThread.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "Add desctiption by java doc",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 63
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_0910434d",
+        "filename": "src/life/Util/Bot.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "description not found",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 18
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_2915473f",
+        "filename": "src/life/Util/Bot.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "if() {} construction",
+      "range": {
+        "startLine": 17,
+        "startChar": 6,
+        "endLine": 17,
+        "endChar": 37
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_e9351fda",
+        "filename": "src/life/Util/FileInterface.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "description class and methods by java doc",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 28
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_a92717b5",
+        "filename": "src/life/Util/FileInterface.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "if() {}",
+      "range": {
+        "startLine": 31,
+        "startChar": 6,
+        "endLine": 31,
+        "endChar": 71
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_69210f9f",
+        "filename": "src/life/Util/FileInterface.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "too",
+      "range": {
+        "startLine": 40,
+        "startChar": 7,
+        "endLine": 40,
+        "endChar": 71
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_293c27c7",
+        "filename": "src/life/Util/FileInterface.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "for(){for(){}} use",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 58,
+        "endChar": 42
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_6958ef32",
+        "filename": "src/life/core/Cell.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "not used constructor",
+      "range": {
+        "startLine": 10,
+        "startChar": 3,
+        "endLine": 12,
+        "endChar": 5
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_495beb2e",
+        "filename": "src/life/gui/Controller.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "Description",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 50
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_29430744",
+        "filename": "src/life/gui/Main.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1007573
+      },
+      "writtenOn": "2016-04-29T17:19:55Z",
+      "side": 1,
+      "message": "delete this comment line",
+      "range": {
+        "startLine": 36,
+        "startChar": 75,
+        "endLine": 37,
+        "endChar": 6
+      },
+      "revId": "c15a06dc6a91db49bb48eea5ad6743c9aad2aac9",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
