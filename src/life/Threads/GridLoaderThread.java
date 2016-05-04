@@ -20,8 +20,9 @@ public class GridLoaderThread extends AbstractControllerThread {
         try {
             FileInterface descriptor = new FileInterface(FileInterface.READ_MODE, savePath + fileName);
             Platform.runLater(() -> controller.savesList.getSelectionModel().clearSelection());
-            if (fileName == null)
+            if (fileName == null) {
                 return;
+            }
             Board temp = descriptor.loadBoard();
             descriptor.close();
             synchronized (controller.board) {

@@ -34,6 +34,6 @@ public class Main extends Application {
     @Override
     public void stop() {
         ((Controller) fxmlLoader.getController()).engineThread.interrupt();
-        //((Controller) fxmlLoader.getController()).botThread.interrupt();
+        ((Controller) fxmlLoader.getController()).botThread.interrupt();
     }
 }

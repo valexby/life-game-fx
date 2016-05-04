@@ -14,8 +14,9 @@ public class Bot {
 
     public Bot() throws Exception {
         File dataDirectory = new File(dataPath);
-        if (!dataDirectory.canRead())
+        if (!dataDirectory.canRead()) {
             throw new Exception(directoryReadError);
+        }
         dataList = new ArrayList<>(Arrays.asList(dataDirectory.list()));
     }
 

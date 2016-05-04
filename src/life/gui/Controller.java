@@ -107,8 +107,9 @@ public class Controller implements Initializable {
         synchronized (board) {
             board.generate(densitySlider.getValue());
         }
-        if (!engineThread.isAlive())
+        if (!engineThread.isAlive()) {
             display.displayBoard(board);
+        }
     }
 
     @FXML
@@ -123,22 +124,27 @@ public class Controller implements Initializable {
 
     @FXML
     private void onClean(Event evt) {
-        if (engineThread.isAlive())
+        if (engineThread.isAlive()) {
             onLifeControl(evt);
+        }
         board.resetGrid();
         display.displayBoard(board);
     }
 
     @FXML
     private void onLoad(Event evt) {
-        if (gridLoadThread != null && gridLoadThread.isAlive()) return;
+        if (gridLoadThread != null && gridLoadThread.isAlive()) {
+            return;
+        }
         gridLoadThread = new GridLoaderThread(this, savesList.getSelectionModel().getSelectedItem());
         gridLoadThread.start();
     }
 
     @FXML
     private void onSave(Event evt) {
-        if (gridSaveThread != null && gridSaveThread.isAlive()) return;
+        if (gridSaveThread != null && gridSaveThread.isAlive()) {
+            return;
+        }
         String fileName = saveField.getText();
         gridSaveThread = new GridSaverThread(this, fileName);
         gridSaveThread.start();

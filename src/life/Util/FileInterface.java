@@ -28,7 +28,9 @@ public class FileInterface {
     }
 
     public void saveBoard(Board board) throws Exception {
-        if (fileMode != WRITE_MODE) throw new Exception(wrongFileMode);
+        if (fileMode != WRITE_MODE) {
+            throw new Exception(wrongFileMode);
+        }
         int rows = board.getRows(), cols = board.getCols();
         ArrayList<Boolean> buffer;
         buffer = new ArrayList<>(rows * cols);
@@ -37,7 +39,9 @@ public class FileInterface {
     }
 
     public void saveGrid(ArrayList<Boolean> gridMap, int rows, int cols) throws Exception {
-        if (fileMode != WRITE_MODE) throw new Exception(wrongFileMode);
+        if (fileMode != WRITE_MODE) {
+            throw new Exception(wrongFileMode);
+        }
         outputStream.writeInt(rows);
         outputStream.writeInt(cols);
         for (Boolean i : gridMap)
@@ -45,27 +49,33 @@ public class FileInterface {
     }
 
     public Board loadBoard() throws Exception {
-        if (fileMode != READ_MODE) throw new Exception(wrongFileMode);
+        if (fileMode != READ_MODE) {
+            throw new Exception(wrongFileMode);
+        }
         int cols, rows;
         Board result = new Board();
         rows = inputStream.readInt();
         cols = inputStream.readInt();
-        if (rows < 0 || cols < 0)
+        if (rows < 0 || cols < 0) {
             throw new Exception(badDataMessage);
+        }
         result.setRows(rows);
         result.setCols(cols);
-        for (int i = 0; i < rows; i++)
-            for (int j = 0; j < cols; j++)
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 result.getGrid().get(i).get(j).setNewState(inputStream.readBoolean());
+            }
+        }
         result.commit();
         return result;
     }
 
     public void close() throws IOException {
-        if (fileMode == READ_MODE)
+        if (fileMode == READ_MODE) {
             inputStream.close();
-        else if (fileMode == WRITE_MODE)
+        } else if (fileMode == WRITE_MODE) {
             outputStream.close();
+        }
         fileMode = 2;
     }
 }
