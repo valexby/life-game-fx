@@ -14,36 +14,46 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import life.Threads.BotThread;
 import life.Threads.EngineThread;
 import life.Threads.GridLoaderThread;
 import life.Threads.GridSaverThread;
+import life.Threads.ReplaySaverThread;
 import life.Threads.SavesListThread;
 import life.Util.Bot;
+import life.Util.Chronicle;
 import life.core.Board;
 
 public class Controller implements Initializable {
 
     private final static int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 5, cellSizePx = 4;
-    private final static String savePath = "saves/";
+    private final static String savePath = "saves/", replayPath = "replay/test";
     @FXML
     public ListView<String> savesList;
     public Board board;
     public DisplayDriver display;
     public Bot bot;
     public SavesListThread savesListThread = null;
+    public Chronicle chronicle = null;
+    public boolean replaySaveFlag = false;
+    @FXML
+    public Button replayButton;
+    ReplaySaverThread replaySaverThread = new ReplaySaverThread(this, replayPath);
     EngineThread engineThread = new EngineThread(this);
     BotThread botThread = new BotThread(this);
     @FXML
     private FlowPane base;
     @FXML
-    private Button lifeButton, botButton;
+    private Button lifeButton, botButton, generateButton, cleanButton;
     @FXML
     private HBox rootBox;
     @FXML
     private Slider densitySlider, engineFreqSlider, botFreqSlider;
+    @FXML
+    private TitledPane saveMenu, loadMenu;
     @FXML
     private TextField saveField;
     private GridLoaderThread gridLoadThread = null;
@@ -80,6 +90,12 @@ public class Controller implements Initializable {
             engineThread.interrupt();
             if (botThread.isAlive()) onBotControl(evt);
             botButton.setDisable(true);
+            try {
+                engineThread.join();
+                botThread.join();
+            } catch (InterruptedException ex) {
+                showErrorMessage("Unexpected main thread kill", ex.getMessage());
+            }
         } else {
             lifeButton.setText("Stop");
             engineThread = new EngineThread(this);
@@ -146,7 +162,7 @@ public class Controller implements Initializable {
             return;
         }
         String fileName = saveField.getText();
-        gridSaveThread = new GridSaverThread(this, fileName);
+        gridSaveThread = new GridSaverThread(this, savePath + fileName);
         gridSaveThread.start();
     }
 
@@ -157,6 +173,28 @@ public class Controller implements Initializable {
         savesList.setEditable(false);
         savesList.getItems().remove(buffer);
         savesList.setEditable(true);
+    }
+
+    @FXML
+    private void onReplaySave(Event evt) {
+        replaySaveFlag = !replaySaveFlag;
+        if (!replaySaveFlag) {
+            replayButton.setDisable(true);
+            replayButton.setText("Write");
+            replaySaverThread.interrupt();
+            generateButton.setDisable(false);
+            cleanButton.setDisable(false);
+            saveMenu.setDisable(false);
+            loadMenu.setDisable(false);
+        } else {
+            replayButton.setText("Stop");
+            generateButton.setDisable(true);
+            cleanButton.setDisable(true);
+            saveMenu.setDisable(true);
+            loadMenu.setDisable(true);
+            chronicle = new Chronicle(replaySaverThread);
+            replaySaverThread.start();
+        }
     }
 
     private void createDisplay() {

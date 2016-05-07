@@ -11,6 +11,11 @@ public class Cell {
 
     }
 
+    public Cell(Cell clone) {
+        state = clone.state;
+        newState = clone.newState;
+    }
+
     public Cell(boolean state) {
         this.state = state;
     }

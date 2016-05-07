@@ -1,6 +1,8 @@
 package life.Threads;
 
 import javafx.application.Platform;
+import life.Util.Chronicle;
+import life.Util.LifeEvent;
 import life.gui.Controller;
 
 public class EngineThread extends AbstractFrequencyThread {
@@ -11,12 +13,21 @@ public class EngineThread extends AbstractFrequencyThread {
         maxFrequency = engineMaxFrequency;
     }
 
-    void process() {
+    public EngineThread(Controller controller, Chronicle chronicle) {
+        super(controller, chronicle);
+        maxFrequency = engineMaxFrequency;
+    }
+
+    LifeEvent process(boolean gather) {
         synchronized (controller.board) {
             Platform.runLater(() -> {
                 controller.board.update();
                 controller.display.displayBoard(controller.board);
             });
         }
+        if (gather) {
+            return new LifeEvent(LifeEvent.TICK, 0, 0, 0);
+        }
+        return null;
     }
 }

@@ -7,7 +7,6 @@ import life.Util.FileInterface;
 import life.gui.Controller;
 
 public class GridSaverThread extends AbstractControllerThread {
-    private final static String savePath = "saves/";
     private String fileName;
 
     public GridSaverThread(Controller controller, String fileName) {
@@ -20,7 +19,7 @@ public class GridSaverThread extends AbstractControllerThread {
         int cols, rows;
         ArrayList<Boolean> buffer;
         try {
-            FileInterface descriptor = new FileInterface(FileInterface.WRITE_MODE, savePath + fileName);
+            FileInterface descriptor = new FileInterface(FileInterface.WRITE_MODE, fileName);
             synchronized (controller.board) {
                 rows = controller.board.getRows();
                 cols = controller.board.getCols();

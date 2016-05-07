@@ -14,6 +14,18 @@ public class Board {
         grid = new ArrayList<>();
     }
 
+    public Board(Board clone) {
+        rows = clone.getRows();
+        cols = clone.getCols();
+        grid = new ArrayList<>(rows);
+        for (int i = 0; i < rows; i++) {
+            grid.add(new ArrayList<>(cols));
+            for (int j = 0; j < cols; j++) {
+                grid.get(i).add(new Cell(clone.getGrid().get(i).get(j)));
+            }
+        }
+    }
+
     /**
      * Generate cells on game board
      *

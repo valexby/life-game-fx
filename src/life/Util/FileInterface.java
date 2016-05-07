@@ -27,15 +27,25 @@ public class FileInterface {
         }
     }
 
-    public void saveBoard(Board board) throws Exception {
+    public void saveEvent(LifeEvent event) throws Exception {
         if (fileMode != WRITE_MODE) {
             throw new Exception(wrongFileMode);
         }
-        int rows = board.getRows(), cols = board.getCols();
-        ArrayList<Boolean> buffer;
-        buffer = new ArrayList<>(rows * cols);
-        board.getGrid().stream().forEach(i -> i.forEach(j -> buffer.add(j.getState())));
-        saveGrid(buffer, rows, cols);
+        outputStream.writeInt(event.type);
+        switch (event.type) {
+            case LifeEvent.TICK:
+                outputStream.writeInt(event.number);
+                break;
+            case LifeEvent.BOT:
+                outputStream.writeInt(event.row);
+                outputStream.writeInt(event.col);
+                outputStream.writeInt(event.number);
+                break;
+            case LifeEvent.CLICK:
+                outputStream.writeInt(event.row);
+                outputStream.writeInt(event.col);
+                break;
+        }
     }
 
     public void saveGrid(ArrayList<Boolean> gridMap, int rows, int cols) throws Exception {

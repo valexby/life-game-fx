@@ -1,6 +1,8 @@
 package life.Threads;
 
 import javafx.application.Platform;
+import life.Util.Chronicle;
+import life.Util.LifeEvent;
 import life.core.Board;
 import life.gui.Controller;
 
@@ -12,7 +14,12 @@ public class BotThread extends AbstractFrequencyThread {
         maxFrequency = botMaxFrequency;
     }
 
-    void process() throws Exception {
+    public BotThread(Controller controller, Chronicle chronicle) {
+        super(controller, chronicle);
+        maxFrequency = botMaxFrequency;
+    }
+
+    LifeEvent process(boolean gather) throws Exception {
         Board invader;
         try {
             invader = controller.bot.spawn();
@@ -28,6 +35,10 @@ public class BotThread extends AbstractFrequencyThread {
         synchronized (controller.board) {
             controller.board.injectBoard(invader, rows, cols);
         }
+        if (gather) {
+            return new LifeEvent(LifeEvent.BOT, rows, cols, controller.bot.lastSpawnedIndex());
+        }
+        return null;
     }
 }
 

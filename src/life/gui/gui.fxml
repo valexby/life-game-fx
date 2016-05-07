@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="rootBox" maxHeight="-Infinity" maxWidth="-Infinity"
-      minHeight="-Infinity" minWidth="-Infinity" prefHeight="435.0"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="468.0"
       prefWidth="713.0" xmlns="http://javafx.com/javafx/8.0.65"
       fx:controller="life.gui.Controller">
     <children>
@@ -69,8 +69,9 @@
                 </GridPane>
                 <Button fx:id="generateButton" alignment="CENTER" minWidth="90.0"
                         mnemonicParsing="false" onAction="#onGenerate" text="Generate"/>
-                <Button alignment="CENTER" minWidth="90.0" mnemonicParsing="false"
-                        onAction="#onClean" text="Clean" textAlignment="CENTER">
+                <Button fx:id="cleanButton" alignment="CENTER" minWidth="90.0"
+                        mnemonicParsing="false" onAction="#onClean" text="Clean"
+                        textAlignment="CENTER">
                     <opaqueInsets>
                         <Insets/>
                     </opaqueInsets>
@@ -80,7 +81,7 @@
                 </Button>
                 <Accordion>
                     <panes>
-                        <TitledPane animated="false" expanded="false" text="Save">
+                        <TitledPane fx:id="saveMenu" animated="false" expanded="false" text="Save">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="26.0"
                                             prefWidth="208.0">
@@ -91,7 +92,7 @@
                                 </AnchorPane>
                             </content>
                         </TitledPane>
-                        <TitledPane animated="false" expanded="false" text="Load">
+                        <TitledPane fx:id="loadMenu" animated="false" expanded="false" text="Load">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0"
                                             prefWidth="200.0">
@@ -109,6 +110,12 @@
                         <Insets top="10.0"/>
                     </padding>
                 </Accordion>
+                <Button fx:id="replayButton" minWidth="90.0" mnemonicParsing="false"
+                        onAction="#onReplaySave" text="Write">
+                    <VBox.margin>
+                        <Insets top="10.0"/>
+                    </VBox.margin>
+                </Button>
             </children>
             <padding>
                 <Insets right="10.0"/>
