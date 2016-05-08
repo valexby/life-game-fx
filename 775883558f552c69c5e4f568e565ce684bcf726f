@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_7a8f762a",
+        "filename": "src/life/Threads/ReplaySaverThread.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-05-08T10:20:16Z",
+      "side": 1,
+      "message": "разнеси как пацан в духе\n.getGrid()\n.stream\n.forEach(...)",
+      "range": {
+        "startLine": 34,
+        "startChar": 12,
+        "endLine": 34,
+        "endChar": 104
+      },
+      "revId": "775883558f552c69c5e4f568e565ce684bcf726f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "baa041b7_5a8032f7",
+        "filename": "src/life/Util/LifeEvent.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-05-08T10:20:16Z",
+      "side": 1,
+      "message": "мог бы enum юзануть",
+      "range": {
+        "startLine": 4,
+        "startChar": 3,
+        "endLine": 4,
+        "endChar": 57
+      },
+      "revId": "775883558f552c69c5e4f568e565ce684bcf726f",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
