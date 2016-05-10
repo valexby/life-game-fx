@@ -36,5 +36,6 @@ public class Main extends Application {
         ((Controller) fxmlLoader.getController()).engineThread.interrupt();
         ((Controller) fxmlLoader.getController()).botThread.interrupt();
         ((Controller) fxmlLoader.getController()).replaySaverThread.interrupt();
+        ((Controller) fxmlLoader.getController()).replayLoaderThread.interrupt();
     }
 }

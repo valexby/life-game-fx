@@ -27,6 +27,10 @@ public class Bot {
 
     public Board spawn() throws Exception {
         invaderIndex = (int) Math.round(Math.random() * (dataList.size() - 1));
+        return getBotUnit(invaderIndex);
+    }
+
+    public Board getBotUnit(int invaderIndex) throws Exception {
         FileInterface descriptor = new FileInterface(FileInterface.READ_MODE, dataPath + dataList.get(invaderIndex));
         Board invader;
         try {

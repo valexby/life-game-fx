@@ -67,18 +67,22 @@
                                 GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                     </children>
                 </GridPane>
-                <Button fx:id="generateButton" alignment="CENTER" minWidth="90.0"
-                        mnemonicParsing="false" onAction="#onGenerate" text="Generate"/>
-                <Button fx:id="cleanButton" alignment="CENTER" minWidth="90.0"
-                        mnemonicParsing="false" onAction="#onClean" text="Clean"
-                        textAlignment="CENTER">
-                    <opaqueInsets>
-                        <Insets/>
-                    </opaqueInsets>
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                </Button>
+                <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                    <buttons>
+                        <Button fx:id="generateButton" alignment="CENTER" minWidth="90.0"
+                                mnemonicParsing="false" onAction="#onGenerate" text="Generate"/>
+                        <Button fx:id="cleanButton" alignment="CENTER" minWidth="90.0"
+                                mnemonicParsing="false" onAction="#onClean" text="Clean"
+                                textAlignment="CENTER">
+                            <opaqueInsets>
+                                <Insets/>
+                            </opaqueInsets>
+                        </Button>
+                    </buttons>
+                    <padding>
+                        <Insets right="10.0"/>
+                    </padding>
+                </ButtonBar>
                 <Accordion>
                     <panes>
                         <TitledPane fx:id="saveMenu" animated="false" expanded="false" text="Save">
@@ -110,12 +114,17 @@
                         <Insets top="10.0"/>
                     </padding>
                 </Accordion>
-                <Button fx:id="replayButton" minWidth="90.0" mnemonicParsing="false"
-                        onAction="#onReplaySave" text="Write">
-                    <VBox.margin>
-                        <Insets top="10.0"/>
-                    </VBox.margin>
-                </Button>
+                <ButtonBar prefHeight="40.0" prefWidth="200.0">
+                    <buttons>
+                        <Button fx:id="replaySaveButton" minWidth="90.0" mnemonicParsing="false"
+                                onAction="#onReplaySave" text="Write"/>
+                        <Button fx:id="replayShowButton" mnemonicParsing="false"
+                                onAction="#onShowReplay" text="Show"/>
+                    </buttons>
+                    <padding>
+                        <Insets right="10.0"/>
+                    </padding>
+                </ButtonBar>
             </children>
             <padding>
                 <Insets right="10.0"/>

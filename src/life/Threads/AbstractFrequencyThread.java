@@ -2,7 +2,6 @@ package life.Threads;
 
 import javafx.application.Platform;
 import life.Util.Chronicle;
-import life.Util.LifeEvent;
 import life.gui.Controller;
 
 public abstract class AbstractFrequencyThread extends AbstractControllerThread {
@@ -22,19 +21,17 @@ public abstract class AbstractFrequencyThread extends AbstractControllerThread {
         currentFrequency = newFrequency;
     }
 
-    abstract LifeEvent process(boolean gather) throws Exception;
+    protected abstract boolean process() throws Exception;
 
     @Override
     public void run() {
         while (true) {
             try {
-                if (controller.replaySaveFlag) {
-                    controller.chronicle.put(process(true));
-                } else {
-                    process(false);
-                }
+                if (!process())
+                    return;
             } catch (Exception ex) {
                 Platform.runLater(() -> controller.showErrorMessage("Thread error occurred", ex.getMessage()));
+                break;
             }
             try {
                 sleep(Math.round(maxFrequency / currentFrequency));

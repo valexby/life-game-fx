@@ -14,4 +14,20 @@ public class LifeEvent {
     synchronized public int getType() {
         return type;
     }
+
+    synchronized public int getRow() {
+        return row;
+    }
+
+    synchronized public int getCol() {
+        return col;
+    }
+
+    synchronized public int getNumber() {
+        return number;
+    }
+
+    synchronized public void tick() {
+        number--;
+    }
 }

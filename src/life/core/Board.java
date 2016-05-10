@@ -116,12 +116,12 @@ public class Board {
      * @param colPos  col index of invader position in current board
      * @param rowPos  row index of invader position in current board
      */
-    public void injectBoard(Board invader, int rowPos, int colPos) {
+    public void injectBoard(Board invader, int rowPos, int colPos) throws Exception {
         if (invader == null) {
             return;
         }
         if (invader.getRows() > rows || invader.getCols() > cols) {
-            return;
+            throw new Exception("Board is too small");
         }
         for (int i = 0; i < invader.getRows(); i++) {
             for (int j = 0; j < invader.getCols(); j++) {

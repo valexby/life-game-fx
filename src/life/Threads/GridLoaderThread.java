@@ -19,7 +19,9 @@ public class GridLoaderThread extends AbstractControllerThread {
 
         try {
             FileInterface descriptor = new FileInterface(FileInterface.READ_MODE, savePath + fileName);
-            Platform.runLater(() -> controller.savesList.getSelectionModel().clearSelection());
+            Platform.runLater(() -> {
+                controller.savesList.getSelectionModel().clearSelection();
+            });
             if (fileName == null) {
                 return;
             }
@@ -27,10 +29,14 @@ public class GridLoaderThread extends AbstractControllerThread {
             descriptor.close();
             synchronized (controller.board) {
                 controller.board.injectBoard(temp, 0, 0);
-                controller.display.displayBoard(controller.board);
+                Platform.runLater(() -> {
+                    controller.display.displayBoard(controller.board);
+                });
             }
         } catch (Exception ex) {
-            Platform.runLater(() -> controller.showErrorMessage("Load error occurred", ex.getMessage()));
+            Platform.runLater(() -> {
+                controller.showErrorMessage("Load error occurred", ex.getMessage());
+            });
         }
     }
 }

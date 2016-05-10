@@ -34,7 +34,9 @@ public class GridSaverThread extends AbstractControllerThread {
             }
             controller.savesListThread.run();
         } catch (Exception ex) {
-            Platform.runLater(() -> controller.showErrorMessage("Save error occurred", ex.getMessage()));
+            Platform.runLater(() -> {
+                controller.showErrorMessage("Save error occurred", ex.getMessage());
+            });
         }
     }
 }

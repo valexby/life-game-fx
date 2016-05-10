@@ -20,12 +20,16 @@ public class SavesListThread extends AbstractControllerThread {
         File saveDirectory = new File(savePath);
         if (!saveDirectory.canRead()) {
             if (!saveDirectory.mkdir())
-                Platform.runLater(() -> controller.showErrorMessage("Saves directory error", saveDirectory.getPath()));
+                Platform.runLater(() -> {
+                    controller.showErrorMessage("Saves directory error", saveDirectory.getPath());
+                });
             return;
         }
         ObservableList<String> buffer = FXCollections.observableArrayList();
         buffer.addAll(saveDirectory.list());
         Collections.sort(buffer);
-        Platform.runLater(() -> controller.savesList.setItems(buffer));
+        Platform.runLater(() -> {
+            controller.savesList.setItems(buffer);
+        });
     }
 }

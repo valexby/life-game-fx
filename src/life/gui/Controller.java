@@ -21,6 +21,7 @@ import life.Threads.BotThread;
 import life.Threads.EngineThread;
 import life.Threads.GridLoaderThread;
 import life.Threads.GridSaverThread;
+import life.Threads.ReplayLoaderThread;
 import life.Threads.ReplaySaverThread;
 import life.Threads.SavesListThread;
 import life.Util.Bot;
@@ -40,8 +41,9 @@ public class Controller implements Initializable {
     public Chronicle chronicle = null;
     public boolean replaySaveFlag = false;
     @FXML
-    public Button replayButton;
+    public Button replaySaveButton, replayShowButton;
     ReplaySaverThread replaySaverThread = new ReplaySaverThread(this, replayPath);
+    ReplayLoaderThread replayLoaderThread = new ReplayLoaderThread(this, replayPath);
     EngineThread engineThread = new EngineThread(this);
     BotThread botThread = new BotThread(this);
     @FXML
@@ -179,22 +181,65 @@ public class Controller implements Initializable {
     private void onReplaySave(Event evt) {
         replaySaveFlag = !replaySaveFlag;
         if (!replaySaveFlag) {
-            replayButton.setDisable(true);
-            replayButton.setText("Write");
+            replaySaveButton.setDisable(true);
+            replayShowButton.setDisable(false);
+            replaySaveButton.setText("Write");
             replaySaverThread.interrupt();
-            generateButton.setDisable(false);
-            cleanButton.setDisable(false);
-            saveMenu.setDisable(false);
-            loadMenu.setDisable(false);
+            setDisableNotReplayAble(false);
         } else {
-            replayButton.setText("Stop");
-            generateButton.setDisable(true);
-            cleanButton.setDisable(true);
-            saveMenu.setDisable(true);
-            loadMenu.setDisable(true);
+            replaySaveButton.setText("Stop");
+            setDisableNotReplayAble(true);
+            replayShowButton.setDisable(true);
+            replaySaverThread = new ReplaySaverThread(this, replayPath);
             chronicle = new Chronicle(replaySaverThread);
             replaySaverThread.start();
         }
+    }
+
+    @FXML
+    private void onShowReplay(Event evt) {
+        if (replayLoaderThread.isAlive()) {
+            replayLoaderThread.interrupt();
+            try {
+                replayLoaderThread.join();
+            } catch (InterruptedException ex) {
+                showErrorMessage("Unexpected main thread kill", ex.getMessage());
+            }
+            releaseControl();
+        } else {
+            try {
+                if (engineThread.isAlive()) {
+                    engineThread.interrupt();
+                    engineThread.join();
+                }
+                if (botThread.isAlive()) {
+                    botThread.interrupt();
+                    botThread.join();
+                }
+            } catch (InterruptedException ex) {
+                showErrorMessage("Unexpected main thread kill", ex.getMessage());
+            }
+            setDisableNotReplayAble(true);
+            lifeButton.setDisable(true);
+            replaySaveButton.setDisable(true);
+            replayShowButton.setText("Stop");
+            replayLoaderThread = new ReplayLoaderThread(this, replayPath);
+            replayLoaderThread.start();
+        }
+    }
+
+    public void releaseControl() {
+        setDisableNotReplayAble(false);
+        lifeButton.setDisable(false);
+        replaySaveButton.setDisable(false);
+        replayShowButton.setText("Show");
+    }
+
+    private void setDisableNotReplayAble(boolean state) {
+        generateButton.setDisable(state);
+        cleanButton.setDisable(state);
+        saveMenu.setDisable(state);
+        loadMenu.setDisable(state);
     }
 
     private void createDisplay() {

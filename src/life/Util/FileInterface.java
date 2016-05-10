@@ -80,6 +80,23 @@ public class FileInterface {
         return result;
     }
 
+    public LifeEvent loadEvent() throws IOException {
+        int type, row = 0, col = 0, number = 0;
+        if (inputStream.available() == 0) return null;
+        type = inputStream.readInt();
+        switch (type) {
+            case LifeEvent.TICK:
+                number = inputStream.readInt();
+                break;
+            case LifeEvent.BOT:
+                row = inputStream.readInt();
+                col = inputStream.readInt();
+                number = inputStream.readInt();
+                break;
+        }
+        return new LifeEvent(type, row, col, number);
+    }
+
     public void close() throws IOException {
         if (fileMode == READ_MODE) {
             inputStream.close();

@@ -18,16 +18,16 @@ public class EngineThread extends AbstractFrequencyThread {
         maxFrequency = engineMaxFrequency;
     }
 
-    LifeEvent process(boolean gather) {
+    protected boolean process() throws InterruptedException {
         synchronized (controller.board) {
+            controller.board.update();
             Platform.runLater(() -> {
-                controller.board.update();
                 controller.display.displayBoard(controller.board);
             });
         }
-        if (gather) {
-            return new LifeEvent(LifeEvent.TICK, 0, 0, 0);
+        if (controller.replaySaveFlag) {
+            controller.chronicle.put(new LifeEvent(LifeEvent.TICK, 0, 0, 0));
         }
-        return null;
+        return true;
     }
 }

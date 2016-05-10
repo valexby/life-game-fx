@@ -19,7 +19,7 @@ public class BotThread extends AbstractFrequencyThread {
         maxFrequency = botMaxFrequency;
     }
 
-    LifeEvent process(boolean gather) throws Exception {
+    protected boolean process() throws Exception {
         Board invader;
         try {
             invader = controller.bot.spawn();
@@ -35,10 +35,10 @@ public class BotThread extends AbstractFrequencyThread {
         synchronized (controller.board) {
             controller.board.injectBoard(invader, rows, cols);
         }
-        if (gather) {
-            return new LifeEvent(LifeEvent.BOT, rows, cols, controller.bot.lastSpawnedIndex());
+        if (controller.replaySaveFlag) {
+            controller.chronicle.put(new LifeEvent(LifeEvent.BOT, rows, cols, controller.bot.lastSpawnedIndex()));
         }
-        return null;
+        return true;
     }
 }
 
