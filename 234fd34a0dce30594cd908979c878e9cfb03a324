@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baa041b7_2bc4fb8e",
+        "filename": "src/life/gui/Controller.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-05-17T11:38:52Z",
+      "side": 1,
+      "message": "ты местами слова перепутал",
+      "revId": "234fd34a0dce30594cd908979c878e9cfb03a324",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    }
+  ]
+}
