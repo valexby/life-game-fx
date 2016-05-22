@@ -1,16 +1,15 @@
-package life.Threads;
+package life.threads;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
-import life.Util.FileInterface;
-import life.Util.LifeEvent;
 import life.gui.Controller;
+import life.util.FileInterface;
+import life.util.LifeEvent;
 
 public class ReplaySaverThread extends AbstractControllerThread {
 
-    private final static String savePath = "replays/";
     FileInterface descriptor;
     private String fileName;
 
@@ -25,11 +24,9 @@ public class ReplaySaverThread extends AbstractControllerThread {
         try {
             descriptor = new FileInterface(FileInterface.WRITE_MODE, fileName);
         } catch (IOException ex) {
-            Platform.runLater(() -> {
-                controller.showErrorMessage("Replay save error occurred", ex.getMessage());
-            });
+            Platform.runLater(() -> controller.showErrorMessage("Replay save error occurred", ex.getMessage()));
         }
-        synchronized (controller.board) {
+        synchronized (Controller.criticalZone) {
             rows = controller.board.getRows();
             cols = controller.board.getCols();
             gridMap = new ArrayList<>(rows * cols);
@@ -40,9 +37,7 @@ public class ReplaySaverThread extends AbstractControllerThread {
         try {
             descriptor.saveGrid(gridMap, rows, cols);
         } catch (Exception ex) {
-            Platform.runLater(() -> {
-                controller.showErrorMessage("Replay save error occurred", ex.getMessage());
-            });
+            Platform.runLater(() -> controller.showErrorMessage("Replay save error occurred", ex.getMessage()));
         }
     }
 
@@ -65,13 +60,10 @@ public class ReplaySaverThread extends AbstractControllerThread {
             try {
                 descriptor.close();
             } catch (IOException exception) {
-                Platform.runLater(() -> {
-                    controller.showErrorMessage("Replay file close error", exception.getMessage());
-                });
+                Platform.runLater(() ->
+                        controller.showErrorMessage("Replay file close error", exception.getMessage()));
             }
-            Platform.runLater(() -> {
-                controller.replaySaveButton.setDisable(false);
-            });
+            Platform.runLater(() -> controller.replaySaveButton.setDisable(false));
         }
     }
 
@@ -79,9 +71,8 @@ public class ReplaySaverThread extends AbstractControllerThread {
         try {
             descriptor.saveEvent(controller.chronicle.poll());
         } catch (Exception ex) {
-            Platform.runLater(() -> {
-                controller.showErrorMessage("Replay save error occurred", ex.getMessage());
-            });
+            Platform.runLater(() ->
+                    controller.showErrorMessage("Replay save error occurred", ex.getMessage()));
         }
     }
 }

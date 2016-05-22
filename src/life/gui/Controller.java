@@ -5,31 +5,38 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import life.Threads.BotThread;
-import life.Threads.EngineThread;
-import life.Threads.GridLoaderThread;
-import life.Threads.GridSaverThread;
-import life.Threads.ReplayLoaderThread;
-import life.Threads.ReplaySaverThread;
-import life.Threads.SavesListThread;
-import life.Util.Bot;
-import life.Util.Chronicle;
 import life.core.Board;
+import life.threads.BotThread;
+import life.threads.EngineThread;
+import life.threads.GridLoaderThread;
+import life.threads.GridSaverThread;
+import life.threads.ReplayLoaderThread;
+import life.threads.ReplaySaverThread;
+import life.threads.SaveGenerator;
+import life.threads.SavesListThread;
+import life.util.Bot;
+import life.util.Chronicle;
+import life.util.Sorter;
 
 public class Controller implements Initializable {
 
+    public static final Object criticalZone = new Object(), criticalReplayZone = new Object();
     private final static int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 5, cellSizePx = 4;
     private final static String savePath = "saves/", replayPath = "replay/test";
     @FXML
@@ -41,11 +48,12 @@ public class Controller implements Initializable {
     public Chronicle chronicle = null;
     public boolean replaySaveFlag = false;
     @FXML
-    public Button replaySaveButton, replayShowButton;
+    public Button replaySaveButton, replayShowButton, savesSortButton;
     ReplaySaverThread replaySaverThread = new ReplaySaverThread(this, replayPath);
     ReplayLoaderThread replayLoaderThread = new ReplayLoaderThread(this, replayPath);
-    EngineThread engineThread = new EngineThread(this);
+    public EngineThread engineThread = new EngineThread(this);
     BotThread botThread = new BotThread(this);
+    SaveGenerator saveGenerator = new SaveGenerator(this);
     @FXML
     private FlowPane base;
     @FXML
@@ -57,7 +65,11 @@ public class Controller implements Initializable {
     @FXML
     private TitledPane saveMenu, loadMenu;
     @FXML
+    private CheckBox saveGeneratorBox;
+    @FXML
     private TextField saveField;
+    @FXML
+    private ChoiceBox<Sorter.SortMod> choiceMod;
     private GridLoaderThread gridLoadThread = null;
     private GridSaverThread gridSaveThread = null;
 
@@ -83,6 +95,9 @@ public class Controller implements Initializable {
         }
         savesListThread = new SavesListThread(this);
         savesListThread.run();
+        choiceMod.setItems(FXCollections.observableArrayList(
+                Sorter.SortMod.NO_MOD, Sorter.SortMod.JAVA_MOD, Sorter.SortMod.SCALA_MOD));
+        choiceMod.setValue(Sorter.SortMod.NO_MOD);
     }
 
     @FXML
@@ -90,20 +105,36 @@ public class Controller implements Initializable {
         if (engineThread.isAlive()) {
             lifeButton.setText("Run");
             engineThread.interrupt();
-            if (botThread.isAlive()) onBotControl(evt);
+            if (saveGeneratorBox.isSelected()) {
+                saveGenerator.interrupt();
+            }
+            if (botThread.isAlive()) {
+                onBotControl(evt);
+            }
             botButton.setDisable(true);
+            saveGeneratorBox.setDisable(false);
             try {
                 engineThread.join();
                 botThread.join();
+                if (saveGeneratorBox.isSelected()) {
+                    saveGenerator.join();
+                }
             } catch (InterruptedException ex) {
                 showErrorMessage("Unexpected main thread kill", ex.getMessage());
             }
         } else {
             lifeButton.setText("Stop");
             engineThread = new EngineThread(this);
+            if (saveGeneratorBox.isSelected()) {
+                saveGenerator = new SaveGenerator(this);
+            }
             engineThread.setFrequency(Math.round(engineFreqSlider.getValue()));
             engineThread.start();
+            if (saveGeneratorBox.isSelected()) {
+                saveGenerator.start();
+            }
             botButton.setDisable(false);
+            saveGeneratorBox.setDisable(true);
         }
     }
 
@@ -122,7 +153,7 @@ public class Controller implements Initializable {
 
     @FXML
     private void onGenerate(Event evt) {
-        synchronized (board) {
+        synchronized (criticalZone) {
             board.generate(densitySlider.getValue());
         }
         if (!engineThread.isAlive()) {
@@ -170,7 +201,9 @@ public class Controller implements Initializable {
 
     @FXML
     private void onSaveDelete(Event evt) {
-        new File(savePath + savesList.getSelectionModel().getSelectedItem()).delete();
+        if (!new File(savePath + savesList.getSelectionModel().getSelectedItem()).delete()) {
+            showErrorMessage("Delete error", "Unable to delete save file");
+        }
         String buffer = savesList.getSelectionModel().getSelectedItem();
         savesList.setEditable(false);
         savesList.getItems().remove(buffer);
@@ -207,17 +240,8 @@ public class Controller implements Initializable {
             }
             releaseControl();
         } else {
-            try {
-                if (engineThread.isAlive()) {
-                    engineThread.interrupt();
-                    engineThread.join();
-                }
-                if (botThread.isAlive()) {
-                    botThread.interrupt();
-                    botThread.join();
-                }
-            } catch (InterruptedException ex) {
-                showErrorMessage("Unexpected main thread kill", ex.getMessage());
+            if (engineThread.isAlive()) {
+                onLifeControl(evt);
             }
             setDisableNotReplayAble(true);
             lifeButton.setDisable(true);
@@ -226,6 +250,24 @@ public class Controller implements Initializable {
             replayLoaderThread = new ReplayLoaderThread(this, replayPath);
             replayLoaderThread.start();
         }
+    }
+
+    @FXML
+    private void onSavesSort(Event evt) {
+        File saveDirectory = new File(savePath);
+        if (!saveDirectory.canRead()) {
+            showErrorMessage("Saves directory error", saveDirectory.getPath());
+            return;
+        }
+        savesSortButton.setText("Wait...");
+        try {
+            Sorter sorter = new Sorter(saveDirectory.list(), choiceMod.getValue());
+            ObservableList<String> buffer = FXCollections.observableArrayList(sorter.filesSort());
+            savesList.setItems(buffer);
+        } catch (Exception ex) {
+            showErrorMessage("Saves sort error", saveDirectory.getPath());
+        }
+        savesSortButton.setText("Sort Saves");
     }
 
     public void releaseControl() {
@@ -243,14 +285,14 @@ public class Controller implements Initializable {
     }
 
     private void createDisplay() {
-        display = new DisplayDriver(cellSizePx, board);
+        display = new DisplayDriver(this, cellSizePx, board);
         base.getChildren().clear();
         base.getChildren().add(new Group(display.getPane()));
     }
 
-    private void resizeInterface(Number oldValue, Number newValue, int borderSize, SizeGetter getter, SizeSetter setter) {
+    private void resizeInterface(Number newValue, int borderSize, SizeGetter getter, SizeSetter setter) {
         int newSize = newValue.intValue() - borderSize;
-        synchronized (board) {
+        synchronized (criticalZone) {
             if (newSize > 0 && Math.abs(newSize / cellSpacePx - getter.getSize()) > 0) {
                 setter.resize(newSize / cellSpacePx);
                 createDisplay();
@@ -262,12 +304,12 @@ public class Controller implements Initializable {
         rootBox.widthProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             SizeGetter getter = board::getCols;
             SizeSetter setter = board::setCols;
-            resizeInterface(oldValue, newValue, horizontalBorderSz, getter, setter);
+            resizeInterface(newValue, horizontalBorderSz, getter, setter);
         });
         rootBox.heightProperty().addListener((ObservableValue<? extends Number> observable, Number oldValue, Number newValue) -> {
             SizeGetter getter = board::getRows;
             SizeSetter setter = board::setRows;
-            resizeInterface(oldValue, newValue, verticalBorderSz, getter, setter);
+            resizeInterface(newValue, verticalBorderSz, getter, setter);
         });
     }
 

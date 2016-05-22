@@ -1,4 +1,4 @@
-package life.Util;
+package life.util;
 
 import java.io.File;
 import java.util.ArrayList;

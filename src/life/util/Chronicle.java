@@ -1,15 +1,15 @@
-package life.Util;
+package life.util;
 
 import java.util.concurrent.LinkedBlockingDeque;
 
-import life.Threads.ReplaySaverThread;
+import life.threads.ReplaySaverThread;
 
 public class Chronicle {
     private LinkedBlockingDeque<LifeEvent> requests;
     private ReplaySaverThread replaySaverThread;
 
     public Chronicle(ReplaySaverThread replaySaverThread) {
-        requests = new LinkedBlockingDeque<LifeEvent>();
+        requests = new LinkedBlockingDeque<>();
         this.replaySaverThread = replaySaverThread;
     }
 

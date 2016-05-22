@@ -16,10 +16,6 @@ public class Cell {
         newState = clone.newState;
     }
 
-    public Cell(boolean state) {
-        this.state = state;
-    }
-
     public void setNewState(boolean state) {
         newState = state;
     }

@@ -1,4 +1,4 @@
-package life.Util;
+package life.util;
 
 public class LifeEvent {
     public static final int TICK = 0, CLICK = 1, BOT = 2;

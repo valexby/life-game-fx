@@ -1,9 +1,8 @@
-package life.Threads;
+package life.threads;
 
 import javafx.application.Platform;
-import life.Util.Chronicle;
-import life.Util.LifeEvent;
 import life.gui.Controller;
+import life.util.LifeEvent;
 
 public class EngineThread extends AbstractFrequencyThread {
     private final static long engineMaxFrequency = 300;
@@ -13,20 +12,15 @@ public class EngineThread extends AbstractFrequencyThread {
         maxFrequency = engineMaxFrequency;
     }
 
-    public EngineThread(Controller controller, Chronicle chronicle) {
-        super(controller, chronicle);
-        maxFrequency = engineMaxFrequency;
-    }
-
     protected boolean process() throws InterruptedException {
-        synchronized (controller.board) {
+        synchronized (Controller.criticalZone) {
             controller.board.update();
-            Platform.runLater(() -> {
-                controller.display.displayBoard(controller.board);
-            });
+            Platform.runLater(() -> controller.display.displayBoard(controller.board));
         }
         if (controller.replaySaveFlag) {
-            controller.chronicle.put(new LifeEvent(LifeEvent.TICK, 0, 0, 0));
+            synchronized (Controller.criticalReplayZone) {
+                controller.chronicle.put(new LifeEvent(LifeEvent.TICK, 0, 0, 0));
+            }
         }
         return true;
     }

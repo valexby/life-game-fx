@@ -1,4 +1,4 @@
-package life.Threads;
+package life.threads;
 
 import java.io.File;
 import java.util.Collections;
@@ -15,21 +15,21 @@ public class SavesListThread extends AbstractControllerThread {
         super(controller);
     }
 
-    @Override
-    public void run() {
+    private String[] GetSavesList() {
         File saveDirectory = new File(savePath);
         if (!saveDirectory.canRead()) {
-            if (!saveDirectory.mkdir())
-                Platform.runLater(() -> {
-                    controller.showErrorMessage("Saves directory error", saveDirectory.getPath());
-                });
-            return;
+            Platform.runLater(() -> controller.showErrorMessage("Saves directory error", saveDirectory.getPath()));
+            return null;
         }
-        ObservableList<String> buffer = FXCollections.observableArrayList();
-        buffer.addAll(saveDirectory.list());
-        Collections.sort(buffer);
-        Platform.runLater(() -> {
-            controller.savesList.setItems(buffer);
-        });
+        return saveDirectory.list();
     }
+
+    @Override
+    public void run() {
+        ObservableList<String> buffer = FXCollections.observableArrayList(GetSavesList());
+        Collections.sort(buffer);
+        Platform.runLater(() -> controller.savesList.setItems(buffer));
+    }
+
+
 }

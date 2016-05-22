@@ -1,4 +1,4 @@
-package life.Util;
+package life.util;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -92,6 +92,10 @@ public class FileInterface {
                 row = inputStream.readInt();
                 col = inputStream.readInt();
                 number = inputStream.readInt();
+                break;
+            case LifeEvent.CLICK:
+                row = inputStream.readInt();
+                col = inputStream.readInt();
                 break;
         }
         return new LifeEvent(type, row, col, number);

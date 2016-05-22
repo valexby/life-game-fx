@@ -1,4 +1,4 @@
-package life.Threads;
+package life.threads;
 
 import life.gui.Controller;
 

@@ -1,13 +1,15 @@
-package life.Threads;
+package life.threads;
 
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import javafx.application.Platform;
-import life.Util.Chronicle;
-import life.Util.FileInterface;
-import life.Util.LifeEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import life.core.Cell;
 import life.gui.Controller;
+import life.util.FileInterface;
+import life.util.LifeEvent;
 
 public class ReplayLoaderThread extends AbstractFrequencyThread {
 
@@ -19,16 +21,8 @@ public class ReplayLoaderThread extends AbstractFrequencyThread {
     public ReplayLoaderThread(Controller controller, String fileName) {
         super(controller);
         maxFrequency = 300;
-        currentFrequency = 1;
+        currentFrequency = 3;
         replayPath = fileName;
-    }
-
-    public ReplayLoaderThread(Controller controller, Chronicle chronicle) {
-        super(controller, chronicle);
-    }
-
-    public boolean isInitialized() {
-        return initialized;
     }
 
     public void initialize() {
@@ -37,10 +31,8 @@ public class ReplayLoaderThread extends AbstractFrequencyThread {
         try {
             descriptor = new FileInterface(FileInterface.READ_MODE, replayPath);
             controller.board.injectBoard(descriptor.loadBoard(), 0, 0);
-            synchronized (controller.board) {
-                Platform.runLater(() -> {
-                    controller.display.displayBoard(controller.board);
-                });
+            synchronized (Controller.criticalZone) {
+                Platform.runLater(() -> controller.display.displayBoard(controller.board));
             }
             LifeEvent buffer = descriptor.loadEvent();
             while (buffer != null) {
@@ -58,9 +50,8 @@ public class ReplayLoaderThread extends AbstractFrequencyThread {
                 descriptor.close();
             } catch (IOException exception) {
                 initialized = false;
-                Platform.runLater(() -> {
-                    controller.showErrorMessage("Replay file load error", exception.getMessage());
-                });
+                Platform.runLater(() ->
+                        controller.showErrorMessage("Replay file load error", exception.getMessage()));
             }
         }
         initialized = true;
@@ -69,9 +60,7 @@ public class ReplayLoaderThread extends AbstractFrequencyThread {
     protected boolean process() throws Exception {
         if (!initialized) initialize();
         if (requests.isEmpty() && current == null) {
-            Platform.runLater(() -> {
-                controller.releaseControl();
-            });
+            Platform.runLater(() -> controller.releaseControl());
             initialized = false;
             return false;
         }
@@ -79,11 +68,9 @@ public class ReplayLoaderThread extends AbstractFrequencyThread {
             current = requests.poll();
         switch (current.getType()) {
             case LifeEvent.TICK:
-                synchronized (controller.board) {
+                synchronized (Controller.criticalZone) {
                     controller.board.update();
-                    Platform.runLater(() -> {
-                        controller.display.displayBoard(controller.board);
-                    });
+                    Platform.runLater(() -> controller.display.displayBoard(controller.board));
                 }
                 current.tick();
                 if (current.getNumber() == 0) {
@@ -92,12 +79,10 @@ public class ReplayLoaderThread extends AbstractFrequencyThread {
                 break;
             case LifeEvent.BOT:
                 try {
-                    synchronized (controller.board) {
+                    synchronized (Controller.criticalZone) {
                         controller.board.injectBoard(controller.bot.getBotUnit(current.getNumber()),
                                 current.getRow(), current.getCol());
-                        Platform.runLater(() -> {
-                            controller.display.displayBoard(controller.board);
-                        });
+                        Platform.runLater(() -> controller.display.displayBoard(controller.board));
                     }
                 } catch (Exception ex) {
                     Platform.runLater(() -> {
@@ -109,6 +94,20 @@ public class ReplayLoaderThread extends AbstractFrequencyThread {
                 }
                 current = null;
                 break;
+            case LifeEvent.CLICK:
+                synchronized (Controller.criticalZone) {
+                    Cell cell = controller.board.getGrid().get(current.getRow()).get(current.getCol());
+                    Color newColor = cell.getState() ? Color.WHITE : Color.STEELBLUE;
+                    int position = current.getRow() * controller.board.getCols() + current.getCol();
+                    if (!controller.engineThread.isAlive()) {
+                        Rectangle currentRect = ((Rectangle) controller.display.getPane().getChildren().
+                                get(position));
+                        Platform.runLater(() -> currentRect.setFill(newColor));
+                    }
+                    cell.setNewState(!cell.getState());
+                    cell.updateState();
+                    current = null;
+                }
         }
         return true;
     }

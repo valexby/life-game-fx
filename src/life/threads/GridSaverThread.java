@@ -1,10 +1,10 @@
-package life.Threads;
+package life.threads;
 
 import java.util.ArrayList;
 
 import javafx.application.Platform;
-import life.Util.FileInterface;
 import life.gui.Controller;
+import life.util.FileInterface;
 
 public class GridSaverThread extends AbstractControllerThread {
     private String fileName;
@@ -20,7 +20,7 @@ public class GridSaverThread extends AbstractControllerThread {
         ArrayList<Boolean> buffer;
         try {
             FileInterface descriptor = new FileInterface(FileInterface.WRITE_MODE, fileName);
-            synchronized (controller.board) {
+            synchronized (Controller.criticalZone) {
                 rows = controller.board.getRows();
                 cols = controller.board.getCols();
                 buffer = new ArrayList<>(rows * cols);
@@ -34,9 +34,7 @@ public class GridSaverThread extends AbstractControllerThread {
             }
             controller.savesListThread.run();
         } catch (Exception ex) {
-            Platform.runLater(() -> {
-                controller.showErrorMessage("Save error occurred", ex.getMessage());
-            });
+            Platform.runLater(() -> controller.showErrorMessage("Save error occurred", ex.getMessage()));
         }
     }
 }

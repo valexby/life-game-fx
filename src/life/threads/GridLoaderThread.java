@@ -1,9 +1,9 @@
-package life.Threads;
+package life.threads;
 
 import javafx.application.Platform;
-import life.Util.FileInterface;
 import life.core.Board;
 import life.gui.Controller;
+import life.util.FileInterface;
 
 public class GridLoaderThread extends AbstractControllerThread {
     private final static String savePath = "saves/";
@@ -19,24 +19,18 @@ public class GridLoaderThread extends AbstractControllerThread {
 
         try {
             FileInterface descriptor = new FileInterface(FileInterface.READ_MODE, savePath + fileName);
-            Platform.runLater(() -> {
-                controller.savesList.getSelectionModel().clearSelection();
-            });
+            Platform.runLater(() -> controller.savesList.getSelectionModel().clearSelection());
             if (fileName == null) {
                 return;
             }
             Board temp = descriptor.loadBoard();
             descriptor.close();
-            synchronized (controller.board) {
+            synchronized (Controller.criticalZone) {
                 controller.board.injectBoard(temp, 0, 0);
-                Platform.runLater(() -> {
-                    controller.display.displayBoard(controller.board);
-                });
+                Platform.runLater(() -> controller.display.displayBoard(controller.board));
             }
         } catch (Exception ex) {
-            Platform.runLater(() -> {
-                controller.showErrorMessage("Load error occurred", ex.getMessage());
-            });
+            Platform.runLater(() -> controller.showErrorMessage("Load error occurred", ex.getMessage()));
         }
     }
 }
