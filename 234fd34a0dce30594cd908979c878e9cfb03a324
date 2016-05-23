@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "baa041b7_2e43bbb3",
+        "filename": "src/life/Threads/ReplayLoaderThread.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1007604
+      },
+      "writtenOn": "2016-05-23T14:11:09Z",
+      "side": 1,
+      "message": "сресурс",
+      "revId": "234fd34a0dce30594cd908979c878e9cfb03a324",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "baa041b7_2bc4fb8e",
         "filename": "src/life/gui/Controller.java",
         "patchSetId": 1
