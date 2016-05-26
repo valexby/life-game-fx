@@ -1,5 +1,6 @@
 package life.gui;
 
+import java.io.IOException;
 import java.net.URL;
 
 import javafx.application.Application;
@@ -8,6 +9,7 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import life.util.SceneSaver;
 
 
 public class Main extends Application {
@@ -19,24 +21,30 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        URL location = getClass().getResource("gui.fxml");
+    public void start(Stage primaryStage) throws Exception{
+        URL location = getClass().getResource("mainGui.fxml");
         fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(location);
         fxmlLoader.setBuilderFactory(new JavaFXBuilderFactory());
         Parent parent = fxmlLoader.load(location.openStream());
-
         primaryStage.setTitle("Game of Life");
-        primaryStage.setScene(new Scene(parent));
+        SceneSaver.getInstance().setMainScene(new Scene(parent));
+        primaryStage.setScene(SceneSaver.getInstance().getMainScene());
         primaryStage.show();
     }
 
+
     @Override
     public void stop() {
-        ((Controller) fxmlLoader.getController()).engineThread.interrupt();
-        ((Controller) fxmlLoader.getController()).botThread.interrupt();
-        ((Controller) fxmlLoader.getController()).replaySaverThread.interrupt();
-        ((Controller) fxmlLoader.getController()).replayLoaderThread.interrupt();
-        ((Controller) fxmlLoader.getController()).saveGenerator.interrupt();
+        if (((MainController) fxmlLoader.getController()).engineThread!=null)
+            ((MainController) fxmlLoader.getController()).engineThread.interrupt();
+        if (((MainController) fxmlLoader.getController()).botThread!=null)
+            ((MainController) fxmlLoader.getController()).botThread.interrupt();
+        if (((MainController) fxmlLoader.getController()).replaySaverThread!=null)
+            ((MainController) fxmlLoader.getController()).replaySaverThread.interrupt();
+        if (((MainController) fxmlLoader.getController()).replayLoaderThread!=null)
+            ((MainController) fxmlLoader.getController()).replayLoaderThread.interrupt();
+        if (((MainController) fxmlLoader.getController()).saveGenerator!=null)
+            ((MainController) fxmlLoader.getController()).saveGenerator.interrupt();
     }
 }

@@ -20,7 +20,7 @@ public class DisplayDriver {
      * @param cellSizePx size of cell in pixels
      * @param board      abstract model to draw
      */
-    public DisplayDriver(Controller controller, int cellSizePx, Board board) {
+    public DisplayDriver(MainController mainController, int cellSizePx, Board board) {
         ArrayList<ArrayList<Cell>> grid = board.getGrid();
         tilePane = new TilePane(1, 1);
         tilePane.setPrefRows(board.getRows());
@@ -31,7 +31,7 @@ public class DisplayDriver {
                 Color color = grid.get(i).get(j).getState() ? Color.STEELBLUE : Color.WHITE;
                 Rectangle rect = new Rectangle(cellSizePx, cellSizePx, color);
                 tilePane.getChildren().add(rect);
-                attachListeners(controller, rect, grid.get(i).get(j), i, j);
+                attachListeners(mainController, rect, grid.get(i).get(j), i, j);
             }
         }
     }
@@ -61,14 +61,14 @@ public class DisplayDriver {
      * @param rect element to attach
      * @param cell cell represents by rectangle element
      */
-    private void attachListeners(Controller controller, Rectangle rect, Cell cell, int row, int col) {
+    private void attachListeners(MainController mainController, Rectangle rect, Cell cell, int row, int col) {
         rect.setOnMouseClicked(event -> {
-            if (controller.replaySaveFlag) {
-                synchronized (Controller.criticalReplayZone) {
+            if (mainController.replaySaveFlag) {
+                synchronized (MainController.criticalReplayZone) {
                     try {
-                        controller.chronicle.put(new LifeEvent(LifeEvent.CLICK, row, col, 0));
+                        mainController.chronicle.put(new LifeEvent(LifeEvent.CLICK, row, col, 0));
                     } catch (InterruptedException ex) {
-                        Platform.runLater(() -> controller.showErrorMessage("Thread error occurred", ex.getMessage()));
+                        Platform.runLater(() -> mainController.showErrorMessage("Thread error occurred", ex.getMessage()));
                     }
                 }
             }

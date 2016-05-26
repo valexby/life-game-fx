@@ -1,20 +1,15 @@
 package life.threads;
 
 import javafx.application.Platform;
-import life.gui.Controller;
+import life.gui.MainController;
 import life.util.Chronicle;
 
 public abstract class AbstractFrequencyThread extends AbstractControllerThread {
     protected long currentFrequency, maxFrequency;
     protected Chronicle chronicle;
 
-    public AbstractFrequencyThread(Controller controller) {
-        super(controller);
-    }
-
-    public AbstractFrequencyThread(Controller controller, Chronicle chronicle) {
-        super(controller);
-        this.chronicle = chronicle;
+    public AbstractFrequencyThread(MainController mainController) {
+        super(mainController);
     }
 
     public void setFrequency(long newFrequency) {
@@ -30,7 +25,7 @@ public abstract class AbstractFrequencyThread extends AbstractControllerThread {
                 if (!process())
                     return;
             } catch (Exception ex) {
-                Platform.runLater(() -> controller.showErrorMessage("Thread error occurred", ex.getMessage()));
+                Platform.runLater(() -> mainController.showErrorMessage("Thread error occurred", ex.getMessage()));
                 break;
             }
             try {

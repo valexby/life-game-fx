@@ -1,20 +1,20 @@
 package life.threads;
 
-import life.gui.Controller;
+import life.gui.MainController;
 
 public class SaveGenerator extends AbstractControllerThread {
     private final static long maxFrequency = 100;
     private final static String savePath = "saves/";
 
-    public SaveGenerator(Controller controller) {
-        super(controller);
+    public SaveGenerator(MainController mainController) {
+        super(mainController);
     }
 
     @Override
     public void run() {
         int newSaveName = 1;
         while (true) {
-            GridSaverThread saver = new GridSaverThread(controller, savePath + String.valueOf(newSaveName));
+            GridSaverThread saver = new GridSaverThread(mainController, savePath + String.valueOf(newSaveName));
             newSaveName++;
             saver.run();
             try {

@@ -31,19 +31,19 @@ public class FileInterface {
         if (fileMode != WRITE_MODE) {
             throw new Exception(wrongFileMode);
         }
-        outputStream.writeInt(event.type);
-        switch (event.type) {
+        outputStream.writeInt(event.getType());
+        switch (event.getType()) {
             case LifeEvent.TICK:
-                outputStream.writeInt(event.number);
+                outputStream.writeInt(event.getNumber());
                 break;
             case LifeEvent.BOT:
-                outputStream.writeInt(event.row);
-                outputStream.writeInt(event.col);
-                outputStream.writeInt(event.number);
+                outputStream.writeInt(event.getRow());
+                outputStream.writeInt(event.getCol());
+                outputStream.writeInt(event.getNumber());
                 break;
             case LifeEvent.CLICK:
-                outputStream.writeInt(event.row);
-                outputStream.writeInt(event.col);
+                outputStream.writeInt(event.getRow());
+                outputStream.writeInt(event.getCol());
                 break;
         }
     }

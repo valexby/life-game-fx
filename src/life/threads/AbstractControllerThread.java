@@ -1,11 +1,11 @@
 package life.threads;
 
-import life.gui.Controller;
+import life.gui.MainController;
 
 public abstract class AbstractControllerThread extends Thread {
-    protected volatile Controller controller;
+    protected volatile MainController mainController;
 
-    public AbstractControllerThread(Controller controller) {
-        this.controller = controller;
+    public AbstractControllerThread(MainController mainController) {
+        this.mainController = mainController;
     }
 }
