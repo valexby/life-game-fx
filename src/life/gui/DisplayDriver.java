@@ -26,8 +26,8 @@ public class DisplayDriver {
         tilePane.setPrefRows(board.getRows());
         tilePane.setPrefColumns(board.getCols());
 
-        for (int i = 0;i<grid.size();i++) {
-            for (int j = 0;j<grid.get(i).size();j++) {
+        for (int i = 0; i < grid.size(); i++) {
+            for (int j = 0; j < grid.get(i).size(); j++) {
                 Color color = grid.get(i).get(j).getState() ? Color.STEELBLUE : Color.WHITE;
                 Rectangle rect = new Rectangle(cellSizePx, cellSizePx, color);
                 tilePane.getChildren().add(rect);

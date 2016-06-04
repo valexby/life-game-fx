@@ -5,23 +5,25 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
-
-<VBox alignment="BOTTOM_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="356.0" prefWidth="302.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="life.gui.TableController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" alignment="BOTTOM_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity"
+      minHeight="-Infinity" minWidth="-Infinity" prefHeight="356.0"
+      prefWidth="302.0" xmlns="http://javafx.com/javafx/8.0.65"
+      fx:controller="life.gui.TableController">
     <children>
         <TableView fx:id="mapTable" prefHeight="367.0" prefWidth="368.0">
             <columns>
-            <TableColumn fx:id="numberColumn" prefWidth="75.0" text="Number" />
-                <TableColumn fx:id="ticksColumn" prefWidth="75.0" text="Ticks" />
-                <TableColumn fx:id="clicksColumn" prefWidth="75.0" text="Clicks" />
-            <TableColumn fx:id="botsColumn" prefWidth="75.0" text="Bots" />
+                <TableColumn fx:id="numberColumn" prefWidth="75.0" text="Number"/>
+                <TableColumn fx:id="ticksColumn" prefWidth="75.0" text="Ticks"/>
+                <TableColumn fx:id="clicksColumn" prefWidth="75.0" text="Clicks"/>
+                <TableColumn fx:id="botsColumn" prefWidth="75.0" text="Bots"/>
             </columns>
             <VBox.margin>
-                <Insets />
+                <Insets/>
             </VBox.margin>
         </TableView>
         <Button fx:id="backButton" mnemonicParsing="false" onAction="#onBack" text="Back">
             <VBox.margin>
-                <Insets bottom="5.0" right="2.0" top="2.0" />
+                <Insets bottom="5.0" right="2.0" top="2.0"/>
             </VBox.margin>
         </Button>
     </children>

@@ -1,6 +1,5 @@
 package life.gui;
 
-import java.io.IOException;
 import java.net.URL;
 
 import javafx.application.Application;
@@ -21,7 +20,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         URL location = getClass().getResource("mainGui.fxml");
         fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(location);
@@ -36,15 +35,15 @@ public class Main extends Application {
 
     @Override
     public void stop() {
-        if (((MainController) fxmlLoader.getController()).engineThread!=null)
+        if (((MainController) fxmlLoader.getController()).engineThread != null)
             ((MainController) fxmlLoader.getController()).engineThread.interrupt();
-        if (((MainController) fxmlLoader.getController()).botThread!=null)
+        if (((MainController) fxmlLoader.getController()).botThread != null)
             ((MainController) fxmlLoader.getController()).botThread.interrupt();
-        if (((MainController) fxmlLoader.getController()).replaySaverThread!=null)
+        if (((MainController) fxmlLoader.getController()).replaySaverThread != null)
             ((MainController) fxmlLoader.getController()).replaySaverThread.interrupt();
-        if (((MainController) fxmlLoader.getController()).replayLoaderThread!=null)
+        if (((MainController) fxmlLoader.getController()).replayLoaderThread != null)
             ((MainController) fxmlLoader.getController()).replayLoaderThread.interrupt();
-        if (((MainController) fxmlLoader.getController()).saveGenerator!=null)
+        if (((MainController) fxmlLoader.getController()).saveGenerator != null)
             ((MainController) fxmlLoader.getController()).saveGenerator.interrupt();
     }
 }

@@ -2,7 +2,7 @@ package life.util
 
 class ScalaStatistic {
   def getStatistic(chronicle: Array[Chronicle]) = {
-    (Seq[(Integer, Integer, Integer)]() /: chronicle)(_:+_.getMap)
+    (Seq[(Integer, Integer, Integer)]() /: chronicle) (_ :+ _.getMap)
       .zipWithIndex.map(x => new MapObserve(x._1, x._2))
   }
 }

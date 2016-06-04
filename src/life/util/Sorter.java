@@ -12,6 +12,7 @@ public class Sorter {
     private final static String savePath = "saves/", tempPath = "temp/";
     private String[] baseList;
     private SaveCarrier[] resultList;
+
     public Sorter(String[] baseList) throws Exception {
         this.baseList = baseList;
         Collections.sort(Arrays.asList(this.baseList));
@@ -53,9 +54,9 @@ public class Sorter {
         Alert infoMessage = new Alert(Alert.AlertType.INFORMATION);
         infoMessage.setTitle("Done");
         infoMessage.setHeaderText("Sort is done");
-        infoMessage.setContentText("Def time is " + defTime / 1000 + "ms\n"+
-                "Java time is " + javaTime / 1000 + "ms\n"+
-            "Scala time is" + scalaTime /1000 + "ms");
+        infoMessage.setContentText("Def time is " + defTime / 1000 + "ms\n" +
+                "Java time is " + javaTime / 1000 + "ms\n" +
+                "Scala time is" + scalaTime / 1000 + "ms");
         infoMessage.show();
         return buffer;
     }

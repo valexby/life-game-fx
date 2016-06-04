@@ -13,8 +13,8 @@ public class SavesListThread extends AbstractControllerThread {
     private final static String savePath = "saves/", replayPath = "replay/";
     private String path;
     private ListView<String> destinationList;
-    public enum ListId {SAVES, REPLAYS}
     private ListId listId;
+
     public SavesListThread(MainController mainController, String path, ListView<String> destinationList) {
         super(mainController);
         this.path = path;
@@ -36,6 +36,8 @@ public class SavesListThread extends AbstractControllerThread {
         Collections.sort(buffer);
         Platform.runLater(() -> destinationList.setItems(buffer));
     }
+
+    public enum ListId {SAVES, REPLAYS}
 
 
 }

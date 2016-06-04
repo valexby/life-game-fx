@@ -11,7 +11,7 @@ public class MapObserve {
         ticks = new SimpleIntegerProperty(data._1());
         clicks = new SimpleIntegerProperty(data._2());
         bots = new SimpleIntegerProperty(data._3());
-        this.index = new SimpleIntegerProperty(index);
+        this.index = new SimpleIntegerProperty(index + 1);
     }
 
     public IntegerProperty ticksProperty() {
@@ -28,5 +28,21 @@ public class MapObserve {
 
     public IntegerProperty indexProperty() {
         return index;
+    }
+
+    public int getTicks() {
+        return ticks.get();
+    }
+
+    public int getClicks() {
+        return clicks.get();
+    }
+
+    public int getBots() {
+        return bots.get();
+    }
+
+    public int getIndex() {
+        return index.get();
     }
 }

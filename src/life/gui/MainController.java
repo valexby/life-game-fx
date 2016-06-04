@@ -22,7 +22,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -47,9 +46,8 @@ import life.util.Sorter;
 public class MainController implements Initializable {
 
     public static final Object criticalZone = new Object(), criticalReplayZone = new Object();
-    private final static int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 5, cellSizePx = 4;
-    private boolean deleteFlag = false;
     public final static String savePath = "saves/", replayPath = "replay/";
+    private final static int horizontalBorderSz = 243, verticalBorderSz = 15, cellSpacePx = 5, cellSizePx = 4;
     @FXML
     public ListView<String> savesList, replaysList;
     public Board board;
@@ -60,11 +58,12 @@ public class MainController implements Initializable {
     public boolean replaySaveFlag = false;
     @FXML
     public Button replaySaveButton, savesSortButton;
+    public EngineThread engineThread = null;
     ReplaySaverThread replaySaverThread = null;
     ReplayLoaderThread replayLoaderThread = null;
-    public EngineThread engineThread = null;
     BotThread botThread = null;
     SaveGenerator saveGenerator = null;
+    private boolean deleteFlag = false;
     @FXML
     private FlowPane base;
     @FXML
@@ -110,7 +109,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void onLifeControl(Event evt) {
-        if (replayLoaderThread!=null && replayLoaderThread.isAlive()) {
+        if (replayLoaderThread != null && replayLoaderThread.isAlive()) {
             replayLoaderThread.interrupt();
             try {
                 replayLoaderThread.join();
@@ -118,22 +117,22 @@ public class MainController implements Initializable {
                 showErrorMessage("Unexpected main thread kill", ex.getMessage());
             }
             releaseControl();
-        } else if (engineThread!=null && engineThread.isAlive()) {
+        } else if (engineThread != null && engineThread.isAlive()) {
             lifeButton.setText("Run");
             engineThread.interrupt();
-            if (saveGenerator!=null && saveGeneratorBox.isSelected()) {
+            if (saveGenerator != null && saveGeneratorBox.isSelected()) {
                 saveGenerator.interrupt();
             }
-            if (botThread!=null && botThread.isAlive()) {
+            if (botThread != null && botThread.isAlive()) {
                 onBotControl(evt);
             }
             botButton.setDisable(true);
             saveGeneratorBox.setDisable(false);
             try {
                 engineThread.join();
-                if (botThread!=null)
+                if (botThread != null)
                     botThread.join();
-                if (saveGenerator!=null && saveGeneratorBox.isSelected()) {
+                if (saveGenerator != null && saveGeneratorBox.isSelected()) {
                     saveGenerator.join();
                 }
             } catch (InterruptedException ex) {
@@ -157,7 +156,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void onBotControl(Event evt) {
-        if (botThread!=null && botThread.isAlive()) {
+        if (botThread != null && botThread.isAlive()) {
             botButton.setText("Run Bot");
             botThread.interrupt();
         } else {
@@ -173,7 +172,7 @@ public class MainController implements Initializable {
         synchronized (criticalZone) {
             board.generate(densitySlider.getValue());
         }
-        if (engineThread==null || !engineThread.isAlive()) {
+        if (engineThread == null || !engineThread.isAlive()) {
             display.displayBoard(board);
         }
     }
@@ -185,13 +184,13 @@ public class MainController implements Initializable {
 
     @FXML
     private void onBotFreqChanged(Event evt) {
-        if (botThread!=null)
+        if (botThread != null)
             botThread.setFrequency(Math.round(botFreqSlider.getValue()));
     }
 
     @FXML
     private void onClean(Event evt) {
-        if (engineThread!=null && engineThread.isAlive()) {
+        if (engineThread != null && engineThread.isAlive()) {
             onLifeControl(evt);
         }
         board.resetGrid();
@@ -226,16 +225,16 @@ public class MainController implements Initializable {
     private void onSaveDelete(Event evt) {
         String path;
 
-        if (((Node)evt.getSource()).getId().equals("savesList")) {
+        if (((Node) evt.getSource()).getId().equals("savesList")) {
             path = savePath;
         } else {
             path = replayPath;
         }
-        if (!new File(path + ((ListView)evt.getSource()).getSelectionModel().getSelectedItem()).delete()) {
+        if (!new File(path + ((ListView) evt.getSource()).getSelectionModel().getSelectedItem()).delete()) {
             showErrorMessage("Delete error", "Unable to delete save file");
         }
-        String buffer = ((ListView<String>)evt.getSource()).getSelectionModel().getSelectedItem();
-        ((ListView<String>)evt.getSource()).getItems().remove(buffer);
+        String buffer = ((ListView<String>) evt.getSource()).getSelectionModel().getSelectedItem();
+        ((ListView<String>) evt.getSource()).getItems().remove(buffer);
         deleteFlag = true;
     }
 
@@ -265,14 +264,14 @@ public class MainController implements Initializable {
             deleteFlag = false;
             return;
         }
-        if (engineThread!=null && engineThread.isAlive()) {
+        if (engineThread != null && engineThread.isAlive()) {
             onLifeControl(evt);
         }
         setDisableNotReplayAble(true);
         replaySaveButton.setDisable(true);
         lifeButton.setText("Stop");
         replayLoaderThread = new ReplayLoaderThread(this,
-                replayPath+replaysList.getSelectionModel().getSelectedItem());
+                replayPath + replaysList.getSelectionModel().getSelectedItem());
         replayLoaderThread.start();
     }
 
@@ -295,22 +294,22 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void onMapShow(Event evt) throws IOException{
+    private void onMapShow(Event evt) throws IOException {
         Stage stage;
         Parent root;
-        stage = (Stage)lifeButton.getScene().getWindow();
-        if (engineThread!=null && engineThread.isAlive()) {
+        stage = (Stage) lifeButton.getScene().getWindow();
+        if (engineThread != null && engineThread.isAlive()) {
             onLifeControl(evt);
         }
-        if (saveGenerator!=null && saveGenerator.isAlive()) {
+        if (saveGenerator != null && saveGenerator.isAlive()) {
             saveGenerator.interrupt();
         }
-        if (replayLoaderThread!=null && replayLoaderThread.isAlive()) {
+        if (replayLoaderThread != null && replayLoaderThread.isAlive()) {
             replayLoaderThread.interrupt();
         }
-        if (SceneSaver.getInstance().getTableScene()==null) {
-                root = FXMLLoader.load(getClass().getResource("tableGui.fxml"));
-                SceneSaver.getInstance().setTableScene(new Scene(root));
+        if (SceneSaver.getInstance().getTableScene() == null) {
+            root = FXMLLoader.load(getClass().getResource("tableGui.fxml"));
+            SceneSaver.getInstance().setTableScene(new Scene(root));
         }
         stage.setScene(SceneSaver.getInstance().getTableScene());
     }

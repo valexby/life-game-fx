@@ -2,7 +2,6 @@ package life.threads;
 
 import javafx.application.Platform;
 import life.gui.MainController;
-import life.util.Chronicle;
 
 public abstract class AbstractFrequencyThread extends AbstractControllerThread {
     protected long currentFrequency, maxFrequency;

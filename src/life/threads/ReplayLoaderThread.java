@@ -1,15 +1,11 @@
 package life.threads;
 
-import java.io.IOException;
-import java.util.concurrent.LinkedBlockingDeque;
-
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import life.core.Cell;
 import life.gui.MainController;
 import life.util.Chronicle;
-import life.util.FileInterface;
 import life.util.LifeEvent;
 
 public class ReplayLoaderThread extends AbstractFrequencyThread {

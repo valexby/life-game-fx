@@ -1,7 +1,6 @@
 package life.util;
 
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.zip.Inflater;
 
 import life.core.Board;
 import life.threads.ReplaySaverThread;
@@ -35,7 +34,7 @@ public class Chronicle {
         for (LifeEvent i : requests) {
             switch (i.getType()) {
                 case LifeEvent.TICK:
-                    ticks+=i.getNumber();
+                    ticks += i.getNumber();
                     break;
                 case LifeEvent.CLICK:
                     clicks++;
