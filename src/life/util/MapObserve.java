@@ -1,33 +1,32 @@
 package life.util;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import scala.Tuple3;
 
 public class MapObserve {
-    private final StringProperty ticks, clicks, bots, index;
+    private final IntegerProperty ticks, clicks, bots, index;
 
     public MapObserve(Tuple3<Integer, Integer, Integer> data, int index) {
-        ticks = new SimpleStringProperty(data._1().toString());
-        clicks = new SimpleStringProperty(data._2().toString());
-        bots = new SimpleStringProperty(data._3().toString());
-        this.index = new SimpleStringProperty(Integer.toString(index));
+        ticks = new SimpleIntegerProperty(data._1());
+        clicks = new SimpleIntegerProperty(data._2());
+        bots = new SimpleIntegerProperty(data._3());
+        this.index = new SimpleIntegerProperty(index);
     }
 
-    public StringProperty ticksProperty() {
+    public IntegerProperty ticksProperty() {
         return ticks;
     }
 
-
-    public StringProperty clicksProperty() {
+    public IntegerProperty clicksProperty() {
         return clicks;
     }
 
-    public StringProperty botsProperty() {
+    public IntegerProperty botsProperty() {
         return bots;
     }
 
-    public StringProperty indexProperty() {
+    public IntegerProperty indexProperty() {
         return index;
     }
 }

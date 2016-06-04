@@ -41,7 +41,7 @@ public class TableController implements Initializable {
     private TableView mapTable;
 
     @FXML
-    private TableColumn<MapObserve, String> numberColumn, ticksColumn, clicksColumn, botsColumn;
+    private TableColumn<MapObserve, Integer> numberColumn, ticksColumn, clicksColumn, botsColumn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
