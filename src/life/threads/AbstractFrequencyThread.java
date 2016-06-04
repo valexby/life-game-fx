@@ -6,7 +6,6 @@ import life.util.Chronicle;
 
 public abstract class AbstractFrequencyThread extends AbstractControllerThread {
     protected long currentFrequency, maxFrequency;
-    protected Chronicle chronicle;
 
     public AbstractFrequencyThread(MainController mainController) {
         super(mainController);

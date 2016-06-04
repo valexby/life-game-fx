@@ -79,8 +79,6 @@ public class MainController implements Initializable {
     private CheckBox saveGeneratorBox;
     @FXML
     private TextField saveField;
-    @FXML
-    private ChoiceBox<Sorter.SortMod> choiceMod;
     private GridLoaderThread gridLoadThread = null;
     private GridSaverThread gridSaveThread = null;
 
@@ -108,9 +106,6 @@ public class MainController implements Initializable {
         savesListThread.run();
         replaysListThread = new SavesListThread(this, replayPath, replaysList);
         replaysListThread.run();
-        choiceMod.setItems(FXCollections.observableArrayList(
-                Sorter.SortMod.NO_MOD, Sorter.SortMod.JAVA_MOD, Sorter.SortMod.SCALA_MOD));
-        choiceMod.setValue(Sorter.SortMod.NO_MOD);
     }
 
     @FXML
@@ -290,7 +285,7 @@ public class MainController implements Initializable {
         }
         savesSortButton.setText("Wait...");
         try {
-            Sorter sorter = new Sorter(saveDirectory.list(), choiceMod.getValue());
+            Sorter sorter = new Sorter(saveDirectory.list());
             ObservableList<String> buffer = FXCollections.observableArrayList(sorter.filesSort());
             savesList.setItems(buffer);
         } catch (Exception ex) {

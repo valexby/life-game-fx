@@ -1,5 +1,7 @@
 package life.threads;
 
+
+import javafx.application.Platform;
 import life.gui.MainController;
 
 public class SaveGenerator extends AbstractControllerThread {
@@ -13,7 +15,7 @@ public class SaveGenerator extends AbstractControllerThread {
     @Override
     public void run() {
         int newSaveName = 1;
-        while (true) {
+        while (newSaveName < 101) {
             GridSaverThread saver = new GridSaverThread(mainController, savePath + String.valueOf(newSaveName));
             newSaveName++;
             saver.run();
@@ -24,5 +26,6 @@ public class SaveGenerator extends AbstractControllerThread {
                 return;
             }
         }
+        Platform.runLater(() -> mainController.showErrorMessage("done", "done"));
     }
 }
