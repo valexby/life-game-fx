@@ -17,80 +17,63 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<HBox xmlns:fx="http://javafx.com/fxml/1" fx:id="rootBox" maxHeight="-Infinity" maxWidth="-Infinity"
-      minHeight="-Infinity" minWidth="-Infinity" prefHeight="468.0"
-      prefWidth="713.0" xmlns="http://javafx.com/javafx/8.0.65"
-      fx:controller="life.gui.MainController">
+
+<HBox fx:id="rootBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="468.0" prefWidth="713.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="life.gui.MainController">
     <FlowPane fx:id="base" prefHeight="475.0" prefWidth="475.0">
         <HBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
         </HBox.margin>
     </FlowPane>
     <VBox alignment="TOP_CENTER" prefHeight="477.0" prefWidth="218.0">
         <ButtonBar prefHeight="40.0" prefWidth="200.0">
             <buttons>
-                <Button fx:id="lifeButton" minWidth="49.0" mnemonicParsing="false"
-                        onAction="#onLifeControl" prefHeight="25.0" prefWidth="49.0" text="Run"
-                        textAlignment="CENTER"/>
-                <Button fx:id="botButton" disable="true" mnemonicParsing="false"
-                        onAction="#onBotControl" prefHeight="25.0" prefWidth="48.0"
-                        text="Bot Start"/>
+                <Button fx:id="lifeButton" minWidth="49.0" mnemonicParsing="false" onAction="#onLifeControl" prefHeight="25.0" prefWidth="49.0" text="Run" textAlignment="CENTER" />
+                <Button fx:id="botButton" disable="true" mnemonicParsing="false" onAction="#onBotControl" prefHeight="25.0" prefWidth="48.0" text="Bot Start" />
             </buttons>
             <padding>
-                <Insets right="10.0"/>
+                <Insets right="10.0" />
             </padding>
         </ButtonBar>
         <GridPane>
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.0" minWidth="10.0"
-                                   prefWidth="87.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0"
-                                   prefWidth="121.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.0" minWidth="10.0" prefWidth="87.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="121.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
-            <Label text="Density (%)"/>
-            <Label text="Speed" GridPane.rowIndex="1"/>
-            <Slider fx:id="densitySlider" max="1" min="0.01" value="0.3" GridPane.columnIndex="1"
-                    GridPane.rowIndex="0"/>
-            <Slider fx:id="engineFreqSlider" max="6.0" min="1.0"
-                    onMouseReleased="#onEngineFreqChanged" value="1.5" GridPane.columnIndex="1"
-                    GridPane.rowIndex="1"/>
-            <Label text="Bot Speed" GridPane.rowIndex="2"/>
-            <Slider fx:id="botFreqSlider" max="6.0" min="1.0" onMouseReleased="#onBotFreqChanged"
-                    value="1.5" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Density (%)" />
+            <Label text="Speed" GridPane.rowIndex="1" />
+            <Slider fx:id="densitySlider" max="1" min="0.01" value="0.3" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Slider fx:id="engineFreqSlider" max="6.0" min="1.0" onMouseReleased="#onEngineFreqChanged" value="1.5" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="Bot Speed" GridPane.rowIndex="2" />
+            <Slider fx:id="botFreqSlider" max="6.0" min="1.0" onMouseReleased="#onBotFreqChanged" value="1.5" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         </GridPane>
         <ButtonBar prefHeight="40.0" prefWidth="200.0">
             <buttons>
-                <Button fx:id="generateButton" alignment="CENTER" minWidth="90.0"
-                        mnemonicParsing="false" onAction="#onGenerate" text="Generate"/>
-                <Button fx:id="cleanButton" alignment="CENTER" minWidth="90.0"
-                        mnemonicParsing="false" onAction="#onClean" text="Clean"
-                        textAlignment="CENTER">
+                <Button fx:id="generateButton" alignment="CENTER" minWidth="90.0" mnemonicParsing="false" onAction="#onGenerate" text="Generate" />
+                <Button fx:id="cleanButton" alignment="CENTER" minWidth="90.0" mnemonicParsing="false" onAction="#onClean" text="Clean" textAlignment="CENTER">
                     <opaqueInsets>
-                        <Insets/>
+                        <Insets />
                     </opaqueInsets>
                 </Button>
             </buttons>
             <padding>
-                <Insets right="10.0"/>
+                <Insets right="10.0" />
             </padding>
         </ButtonBar>
         <Accordion>
             <panes>
                 <TitledPane fx:id="saveMenu" animated="false" expanded="false" text="Save">
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="26.0" prefWidth="208.0">
-                        <TextField fx:id="saveField" onAction="#onSave" prefHeight="26.0"
-                                   prefWidth="208.0"/>
+                        <TextField fx:id="saveField" onAction="#onSave" prefHeight="26.0" prefWidth="208.0" />
                     </AnchorPane>
                 </TitledPane>
                 <TitledPane fx:id="loadMenu" animated="false" expanded="false" text="Load">
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0">
-                        <ListView fx:id="savesList" onContextMenuRequested="#onSaveDelete"
-                                  onMouseClicked="#onLoad" prefHeight="160.0" prefWidth="208.0"/>
+                        <ListView fx:id="savesList" onContextMenuRequested="#onSaveDelete" onMouseClicked="#onLoad" prefHeight="160.0" prefWidth="208.0" />
                     </AnchorPane>
                 </TitledPane>
                 <TitledPane fx:id="saveManageMenu" animated="false" text="Manage Saves">
@@ -98,45 +81,43 @@
                         <VBox alignment="TOP_CENTER" prefHeight="55.0" prefWidth="210.0">
                             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                 <children>
-                                    <Button fx:id="savesSortButton" minWidth="60.0"
-                                            mnemonicParsing="false" onAction="#onSavesSort"
-                                            text="Sort Saves"/>
+                                    <Button fx:id="savesSortButton" minWidth="90.0" mnemonicParsing="false" onAction="#onSavesSort" prefWidth="90.0" text="Sort Saves" />
+                           <Button minWidth="90.0" mnemonicParsing="false" onAction="#onTransform" prefHeight="26.0" prefWidth="80.0" text="Transform">
+                              <HBox.margin>
+                                 <Insets left="5.0" />
+                              </HBox.margin>
+                           </Button>
                                 </children>
                             </HBox>
-                            <CheckBox fx:id="saveGeneratorBox" mnemonicParsing="false"
-                                      text="Generate Saves">
+                            <CheckBox fx:id="saveGeneratorBox" mnemonicParsing="false" text="Generate Saves">
                                 <padding>
-                                    <Insets bottom="2.0"/>
+                                    <Insets bottom="2.0" />
                                 </padding>
                             </CheckBox>
                         </VBox>
                     </AnchorPane>
                 </TitledPane>
-                <TitledPane fx:id="replayLoadMenu" animated="false" expanded="false"
-                            text="Show Replay">
+                <TitledPane fx:id="replayLoadMenu" animated="false" expanded="false" text="Show Replay">
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="200.0">
-                        <ListView fx:id="replaysList" onContextMenuRequested="#onSaveDelete"
-                                  onMouseClicked="#onReplayShow" prefHeight="158.0"
-                                  prefWidth="208.0"/>
+                        <ListView fx:id="replaysList" onContextMenuRequested="#onSaveDelete" onMouseClicked="#onReplayShow" prefHeight="158.0" prefWidth="208.0" />
                     </AnchorPane>
                 </TitledPane>
             </panes>
             <padding>
-                <Insets top="10.0"/>
+                <Insets top="10.0" />
             </padding>
         </Accordion>
         <ButtonBar prefHeight="40.0" prefWidth="200.0">
             <buttons>
-                <Button mnemonicParsing="false" onAction="#onMapShow" text="Save Map"/>
-                <Button fx:id="replaySaveButton" minWidth="90.0" mnemonicParsing="false"
-                        onAction="#onReplaySave" text="Write"/>
+                <Button mnemonicParsing="false" onAction="#onMapShow" text="Save Map" />
+                <Button fx:id="replaySaveButton" minWidth="90.0" mnemonicParsing="false" onAction="#onReplaySave" text="Write" />
             </buttons>
             <padding>
-                <Insets right="10.0"/>
+                <Insets right="10.0" />
             </padding>
         </ButtonBar>
         <padding>
-            <Insets right="10.0"/>
+            <Insets right="10.0" />
         </padding>
     </VBox>
 </HBox>

@@ -42,7 +42,11 @@ import life.util.Bot;
 import life.util.Chronicle;
 import life.util.SceneSaver;
 import life.util.Sorter;
+import life.util.ScalaNotationPrinter;
 
+/**
+ * Main gui class
+ */
 public class MainController implements Initializable {
 
     public static final Object criticalZone = new Object(), criticalReplayZone = new Object();
@@ -314,6 +318,15 @@ public class MainController implements Initializable {
         stage.setScene(SceneSaver.getInstance().getTableScene());
     }
 
+    @FXML
+    private void onTransform(Event evt) {
+        ScalaNotationPrinter printer = new ScalaNotationPrinter();
+        printer.boardPrint(board);
+    }
+
+    /**
+     * Release controls after blocking them
+     */
     public void releaseControl() {
         setDisableNotReplayAble(false);
         lifeButton.setDisable(false);

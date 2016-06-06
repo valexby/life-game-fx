@@ -9,7 +9,7 @@ import javafx.scene.control.Alert;
 public class Sorter {
 
 
-    private final static String savePath = "saves/", tempPath = "temp/";
+    private final static String savePath = "saves/";
     private String[] baseList;
     private SaveCarrier[] resultList;
 

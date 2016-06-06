@@ -22,6 +22,9 @@ import life.util.ScalaStatistic;
 import life.util.SceneSaver;
 import scala.collection.JavaConversions;
 
+/**
+ * Table gui class
+ */
 public class TableController implements Initializable {
 
     @FXML

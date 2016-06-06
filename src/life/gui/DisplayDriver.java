@@ -51,6 +51,10 @@ public class DisplayDriver {
         }
     }
 
+    /**
+     * Return tilePane with gui cells
+     * @return tilePane for print
+     */
     public TilePane getPane() {
         return tilePane;
     }

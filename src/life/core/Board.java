@@ -8,7 +8,9 @@ import java.util.ArrayList;
 public class Board {
     private ArrayList<ArrayList<Cell>> grid;
     private int rows, cols;
-
+    /**
+     * Default constructor
+     */
     public Board() {
         cols = rows = 0;
         grid = new ArrayList<>();
@@ -30,7 +32,10 @@ public class Board {
                             }
                         }));
     }
-
+    /**
+     * Interface ro access grid of cells
+     * @return main grid of cells
+     */
     public ArrayList<ArrayList<Cell>> getGrid() {
         return grid;
     }
@@ -45,6 +50,10 @@ public class Board {
         }));
     }
 
+    /**
+     * Return cols count
+     * @return cols count
+     */
     public int getCols() {
         return cols;
     }
@@ -71,6 +80,10 @@ public class Board {
         cols = newCols;
     }
 
+    /**
+     * Return rows count
+     * @return rows count
+     */
     public int getRows() {
         return rows;
     }
@@ -173,6 +186,10 @@ public class Board {
                 .forEach(j -> j.updateState()));
     }
 
+    /**
+     * Return count of live cells
+     * @return live cells number
+     */
     public int beautyCount() {
         int result = 0;
         for (ArrayList<Cell> i : grid)

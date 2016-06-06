@@ -24,8 +24,10 @@ public class SavesListThread extends AbstractControllerThread {
     private String[] getSavesList() {
         File directory = new File(path);
         if (!directory.canRead()) {
-            Platform.runLater(() -> mainController.showErrorMessage("Saves directory error", directory.getPath()));
-            return null;
+            if (!directory.mkdir()) {
+                Platform.runLater(() -> mainController.showErrorMessage("Saves directory error", directory.getPath()));
+                return null;
+            }
         }
         return directory.list();
     }
