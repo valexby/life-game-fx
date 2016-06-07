@@ -321,7 +321,14 @@ public class MainController implements Initializable {
     @FXML
     private void onTransform(Event evt) {
         ScalaNotationPrinter printer = new ScalaNotationPrinter();
-        printer.boardPrint(board);
+        try {
+            Chronicle chronicle = new Chronicle(replayPath + replaysList.getItems().get(0));
+            printer.boardPrint(chronicle.getBoard());
+            printer.printChronicle(chronicle);
+        } catch (Exception ex) {
+            showErrorMessage("Chronicle create error", ex.getMessage());
+        }
+
     }
 
     /**

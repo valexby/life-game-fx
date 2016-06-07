@@ -9,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
@@ -69,7 +68,6 @@ public class TableController implements Initializable {
     @FXML
     private void onBack(Event evt) {
         Stage stage;
-        Parent root;
         stage = (Stage) backButton.getScene().getWindow();
         stage.setScene(SceneSaver.getInstance().getMainScene());
     }

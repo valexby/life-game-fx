@@ -14,21 +14,21 @@ public class MapObserve {
         this.index = new SimpleIntegerProperty(index + 1);
     }
 
-    public IntegerProperty ticksProperty() {
-        return ticks;
-    }
-
-    public IntegerProperty clicksProperty() {
-        return clicks;
-    }
-
-    public IntegerProperty botsProperty() {
-        return bots;
-    }
-
-    public IntegerProperty indexProperty() {
-        return index;
-    }
+//    public IntegerProperty ticksProperty() {
+//        return ticks;
+//    }
+//
+//    public IntegerProperty clicksProperty() {
+//        return clicks;
+//    }
+//
+//    public IntegerProperty botsProperty() {
+//        return bots;
+//    }
+//
+//    public IntegerProperty indexProperty() {
+//        return index;
+//    }
 
     public int getTicks() {
         return ticks.get();

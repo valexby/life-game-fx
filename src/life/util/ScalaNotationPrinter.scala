@@ -3,9 +3,6 @@ package life.util
 import life.core.Board
 
 
-/**
-  * Created by valex on 6.6.16.
-  */
 class ScalaNotationPrinter {
   def boardPrint(board : Board): Unit = {
     print("Size " + board.getCols.toString + ' ' + board.getRows.toString + '\n')
@@ -22,5 +19,17 @@ class ScalaNotationPrinter {
         })
         print('\n')
       })
+  }
+
+  def printChronicle(chronicle: Chronicle): Unit = {
+    while (!chronicle.isEmpty)
+    print(chronicle.get().getType match {
+      case LifeEvent.TICK => chronicle.poll().getNumber.toString + " tick here\n"
+      case LifeEvent.CLICK => "Click on " + chronicle.poll().getNumber.toString
+        + 'x' + chronicle.get().getRow.toString + '\n'
+      case LifeEvent.BOT => "Bot spawn figure " + chronicle.poll().getNumber.toString + " at " +
+        chronicle.get().getCol.toString + 'x' + chronicle.poll().getRow.toString + '\n'
+      case _ => "Anomaly event\n"
+    })
   }
 }
