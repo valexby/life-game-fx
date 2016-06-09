@@ -6,9 +6,17 @@ import javafx.application.Platform;
 import life.gui.MainController;
 import life.util.FileInterface;
 
+/**
+ * Thread class, which provides asynchronous function to save game board in file.
+ */
 public class GridSaverThread extends AbstractControllerThread {
     private String fileName;
 
+    /**
+     * Main constructor
+     * @param mainController controller to connect with this thread
+     * @param fileName name of save file
+     */
     public GridSaverThread(MainController mainController, String fileName) {
         super(mainController);
         this.fileName = fileName;

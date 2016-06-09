@@ -5,10 +5,18 @@ import life.core.Board;
 import life.gui.MainController;
 import life.util.FileInterface;
 
+/**
+ * Thread class, provides asynchronous
+ */
 public class GridLoaderThread extends AbstractControllerThread {
     private final static String savePath = "saves/";
     private String fileName;
 
+    /**
+     * Main constructor
+     * @param mainController controller to connect
+     * @param fileName load file name
+     */
     public GridLoaderThread(MainController mainController, String fileName) {
         super(mainController);
         this.fileName = fileName;

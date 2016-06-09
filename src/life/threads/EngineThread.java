@@ -4,9 +4,16 @@ import javafx.application.Platform;
 import life.gui.MainController;
 import life.util.LifeEvent;
 
+/**
+ * Thread class, provides game board update with setted frequency
+ */
 public class EngineThread extends AbstractFrequencyThread {
     private final static long engineMaxFrequency = 300;
 
+    /**
+     * Main controller
+     * @param mainController controller to connect
+     */
     public EngineThread(MainController mainController) {
         super(mainController);
         maxFrequency = engineMaxFrequency;

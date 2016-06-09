@@ -5,9 +5,16 @@ import life.core.Board;
 import life.gui.MainController;
 import life.util.LifeEvent;
 
+/**
+ * Artificial intelligence thread. Spawns figures from data/ to game board.
+ */
 public class BotThread extends AbstractFrequencyThread {
     private final static long botMaxFrequency = 3000;
 
+    /**
+     *
+     * @param mainController controller with board? where new figures will appear.
+     */
     public BotThread(MainController mainController) {
         super(mainController);
         maxFrequency = botMaxFrequency;
